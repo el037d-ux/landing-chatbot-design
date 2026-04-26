@@ -2,10 +2,15 @@ import json
 import os
 import urllib.request
 import urllib.error
+import re
+
+
+HF_API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
+MODEL = "deepseek-ai/DeepSeek-V4-Pro"
 
 
 def handler(event: dict, context) -> dict:
-    """Генерирует план урока с помощью GPT на основе данных от педагога."""
+    """Генерирует план урока с помощью DeepSeek-V4-Pro через HuggingFace на основе данных от педагога."""
 
     if event.get('httpMethod') == 'OPTIONS':
         return {
@@ -73,21 +78,20 @@ def handler(event: dict, context) -> dict:
 
 Сделай план живым, практичным и вдохновляющим. Учти возраст учеников ({grade}) и специфику предмета ({subject})."""
 
-    api_key = os.environ.get('OPENAI_API_KEY', '')
+    api_key = os.environ.get('HUGGINGFACE_API_KEY', '')
 
     request_body = json.dumps({
-        'model': 'gpt-4o-mini',
+        'model': MODEL,
         'messages': [
-            {'role': 'system', 'content': 'Ты профессиональный методист и педагог с 20-летним опытом. Отвечаешь только валидным JSON.'},
+            {'role': 'system', 'content': 'Ты профессиональный методист и педагог с 20-летним опытом. Отвечаешь только валидным JSON без markdown-блоков.'},
             {'role': 'user', 'content': prompt}
         ],
         'temperature': 0.7,
         'max_tokens': 2000,
-        'response_format': {'type': 'json_object'}
     }).encode('utf-8')
 
     req = urllib.request.Request(
-        'https://api.openai.com/v1/chat/completions',
+        HF_API_URL,
         data=request_body,
         headers={
             'Authorization': f'Bearer {api_key}',
@@ -100,6 +104,11 @@ def handler(event: dict, context) -> dict:
         result = json.loads(response.read().decode('utf-8'))
 
     content = result['choices'][0]['message']['content']
+
+    # Убираем markdown-обёртку если модель её добавила
+    content = re.sub(r'^```(?:json)?\s*', '', content.strip())
+    content = re.sub(r'\s*```$', '', content.strip())
+
     lesson_plan = json.loads(content)
 
     return {
