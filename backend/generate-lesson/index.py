@@ -5,7 +5,7 @@ import urllib.error
 import re
 
 
-HF_API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
+HF_API_URL = "https://router.huggingface.co/v1/chat/completions"
 MODEL = "deepseek-ai/DeepSeek-V4-Pro"
 
 
