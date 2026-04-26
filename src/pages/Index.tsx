@@ -87,6 +87,8 @@ const FEATURES = [
   { icon: "Clock", title: "Экономия времени", desc: "Подготовка урока занимает 5 минут вместо нескольких часов" },
 ];
 
+const GENERATE_LESSON_URL = "https://functions.poehali.dev/1186dab1-1c68-4be5-95d4-74d1e710571e";
+
 const STEPS = [
   { id: 1, label: "Предмет", icon: "BookOpen", hint: "Например: биология, история, математика" },
   { id: 2, label: "Класс", icon: "Users", hint: "Выберите класс или укажите возраст аудитории" },
@@ -102,6 +104,156 @@ const CLASS_OPTIONS = [
   "8 класс","9 класс","10 класс","11 класс","Студенты / взрослые",
 ];
 
+type LessonPlan = {
+  title: string;
+  duration: string;
+  overview: string;
+  stages: { name: string; duration: string; description: string; method: string; materials: string }[];
+  activities: { title: string; type: string; description: string; duration: string }[];
+  assessment: { methods: string[]; criteria: string[]; tools: string };
+  homework: string;
+  tips: string[];
+};
+
+function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => void }) {
+  const [tab, setTab] = useState<"stages" | "activities" | "assessment">("stages");
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col animate-fade-in-up"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-8 pt-7 pb-5 border-b border-border flex-shrink-0">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <div className="flex items-center gap-2 mb-1">
+                <span className="w-5 h-5 rounded-md bg-green flex items-center justify-center">
+                  <Icon name="Sparkles" size={12} className="text-white" />
+                </span>
+                <span className="font-body text-xs font-medium text-green uppercase tracking-wider">Урок готов</span>
+              </div>
+              <h2 className="font-display text-2xl font-semibold text-foreground leading-tight">{lesson.title}</h2>
+              <p className="font-body text-sm text-muted-foreground mt-1">{lesson.duration} · {lesson.overview}</p>
+            </div>
+            <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-warm flex items-center justify-center transition-colors flex-shrink-0">
+              <Icon name="X" size={16} className="text-muted-foreground" />
+            </button>
+          </div>
+          {/* Tabs */}
+          <div className="flex gap-1 mt-5 bg-warm rounded-xl p-1">
+            {([["stages","Этапы урока"],["activities","Активности"],["assessment","Оценивание"]] as const).map(([t, l]) => (
+              <button
+                key={t}
+                onClick={() => setTab(t)}
+                className={`flex-1 py-1.5 rounded-lg font-body text-xs font-medium transition-all ${
+                  tab === t ? "bg-white shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"
+                }`}
+              >{l}</button>
+            ))}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="overflow-y-auto flex-1 px-8 py-6 space-y-4">
+          {tab === "stages" && lesson.stages.map((s, i) => (
+            <div key={i} className="flex gap-4">
+              <div className="flex flex-col items-center">
+                <div className="w-7 h-7 rounded-full bg-primary text-white flex items-center justify-center font-body text-xs font-bold flex-shrink-0">{i+1}</div>
+                {i < lesson.stages.length - 1 && <div className="w-px flex-1 bg-border mt-1" />}
+              </div>
+              <div className="pb-4 flex-1">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="font-body font-semibold text-foreground text-sm">{s.name}</span>
+                  <span className="px-2 py-0.5 rounded-full bg-warm font-body text-xs text-muted-foreground">{s.duration}</span>
+                </div>
+                <p className="font-body text-sm text-muted-foreground leading-relaxed mb-1.5">{s.description}</p>
+                <div className="flex flex-wrap gap-2">
+                  {s.method && <span className="px-2 py-0.5 rounded-full bg-green-light text-green font-body text-xs">📋 {s.method}</span>}
+                  {s.materials && <span className="px-2 py-0.5 rounded-full bg-[hsl(38,50%,92%)] text-[hsl(38,50%,35%)] font-body text-xs">🎒 {s.materials}</span>}
+                </div>
+              </div>
+            </div>
+          ))}
+
+          {tab === "activities" && lesson.activities.map((a, i) => (
+            <div key={i} className="p-4 rounded-xl border border-border hover:border-green/30 transition-colors">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="w-6 h-6 rounded-lg bg-green-light flex items-center justify-center">
+                  <Icon name="Zap" size={13} className="text-green" />
+                </span>
+                <span className="font-body font-semibold text-foreground text-sm">{a.title}</span>
+                <span className="ml-auto px-2 py-0.5 rounded-full bg-warm font-body text-xs text-muted-foreground">{a.duration}</span>
+              </div>
+              <p className="font-body text-sm text-muted-foreground leading-relaxed">{a.description}</p>
+              <span className="inline-block mt-2 px-2 py-0.5 rounded-full bg-[hsl(220,30%,95%)] text-[hsl(220,30%,45%)] font-body text-xs capitalize">{a.type}</span>
+            </div>
+          ))}
+
+          {tab === "assessment" && (
+            <div className="space-y-5">
+              <div>
+                <div className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Методы оценивания</div>
+                <div className="space-y-2">
+                  {lesson.assessment.methods.map((m, i) => (
+                    <div key={i} className="flex items-center gap-2.5 p-3 rounded-xl bg-warm">
+                      <Icon name="CheckCircle2" size={16} className="text-green flex-shrink-0" />
+                      <span className="font-body text-sm text-foreground">{m}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <div className="font-body text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">Критерии оценки</div>
+                <div className="space-y-2">
+                  {lesson.assessment.criteria.map((c, i) => (
+                    <div key={i} className="flex items-center gap-2.5 p-3 rounded-xl border border-border">
+                      <span className="w-5 h-5 rounded-full bg-primary text-white font-body text-xs flex items-center justify-center flex-shrink-0">{i+1}</span>
+                      <span className="font-body text-sm text-foreground">{c}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              {lesson.assessment.tools && (
+                <div className="p-4 rounded-xl bg-green-light border border-green/20">
+                  <div className="font-body text-xs font-semibold text-green uppercase tracking-wider mb-1">Инструменты</div>
+                  <p className="font-body text-sm text-foreground">{lesson.assessment.tools}</p>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        {(lesson.homework || (lesson.tips && lesson.tips.length > 0)) && (
+          <div className="px-8 py-5 border-t border-border flex-shrink-0 space-y-3">
+            {lesson.homework && (
+              <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[hsl(38,50%,93%)]">
+                <Icon name="BookOpen" size={16} className="text-[hsl(38,60%,40%)] flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-body text-xs font-semibold text-[hsl(38,60%,40%)] uppercase tracking-wider">Домашнее задание</span>
+                  <p className="font-body text-sm text-foreground mt-0.5">{lesson.homework}</p>
+                </div>
+              </div>
+            )}
+            {lesson.tips && lesson.tips.length > 0 && (
+              <div className="flex items-start gap-2.5 p-3 rounded-xl bg-green-light">
+                <Icon name="Lightbulb" size={16} className="text-green flex-shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-body text-xs font-semibold text-green uppercase tracking-wider">Советы педагогу</span>
+                  <ul className="mt-1 space-y-0.5">
+                    {lesson.tips.map((t, i) => <li key={i} className="font-body text-xs text-foreground">• {t}</li>)}
+                  </ul>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function LessonWizard({ onClose }: { onClose: () => void }) {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState<"next" | "prev">("next");
@@ -115,7 +267,9 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
     plan: "",
     evaluation: "",
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [lesson, setLesson] = useState<LessonPlan | null>(null);
 
   const fields = ["subject","grade","topic","goal","tasks","plan","evaluation"] as const;
 
@@ -129,51 +283,32 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
     }, 220);
   };
 
-  const handleNext = () => {
-    if (step < 7) goTo(step + 1, "next");
-    else setSubmitted(true);
+  const handleNext = async () => {
+    if (step < 7) { goTo(step + 1, "next"); return; }
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch(GENERATE_LESSON_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (data.ok && data.lesson) {
+        setLesson(data.lesson);
+      } else {
+        setError("Не удалось сгенерировать урок. Попробуйте ещё раз.");
+      }
+    } catch {
+      setError("Ошибка соединения. Проверьте интернет и попробуйте снова.");
+    } finally {
+      setLoading(false);
+    }
   };
   const handlePrev = () => { if (step > 1) goTo(step - 1, "prev"); };
 
-  const current = STEPS[step - 1];
-  const fieldKey = fields[step - 1];
-  const progress = (step / 7) * 100;
-
-  const slideClass = animating
-    ? direction === "next"
-      ? "opacity-0 translate-x-4"
-      : "opacity-0 -translate-x-4"
-    : "opacity-100 translate-x-0";
-
-  if (submitted) {
-    return (
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
-        <div
-          className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center animate-fade-in-up"
-          onClick={e => e.stopPropagation()}
-        >
-          <div className="w-16 h-16 rounded-2xl bg-green-light flex items-center justify-center mx-auto mb-6">
-            <Icon name="CheckCircle2" size={32} className="text-green" />
-          </div>
-          <h3 className="font-display text-3xl font-semibold text-foreground mb-3">Готово!</h3>
-          <p className="font-body text-muted-foreground mb-2">Ваш урок сохранён. ИИ-помощник уже готовит материалы.</p>
-          <div className="mt-6 p-4 rounded-xl bg-warm text-left space-y-2 mb-6">
-            {STEPS.map((s, i) => (
-              <div key={s.id} className="flex gap-2 text-sm font-body">
-                <span className="text-muted-foreground w-24 flex-shrink-0">{s.label}:</span>
-                <span className="text-foreground font-medium truncate">{form[fields[i]] || "—"}</span>
-              </div>
-            ))}
-          </div>
-          <button
-            onClick={onClose}
-            className="w-full py-3 rounded-xl bg-primary text-white font-body font-medium hover:bg-primary/90 transition-colors"
-          >
-            Закрыть
-          </button>
-        </div>
-      </div>
-    );
+  if (lesson) {
+    return <LessonResult lesson={lesson} onClose={onClose} />;
   }
 
   return (
@@ -286,8 +421,15 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
 
             {step !== 2 && <div className="mb-6" />}
 
+            {error && (
+              <div className="mb-4 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2">
+                <Icon name="AlertCircle" size={16} className="text-destructive flex-shrink-0" />
+                <span className="font-body text-sm text-destructive">{error}</span>
+              </div>
+            )}
+
             <div className="flex gap-3">
-              {step > 1 && (
+              {step > 1 && !loading && (
                 <button
                   onClick={handlePrev}
                   className="flex items-center gap-2 px-5 py-3 rounded-xl border border-border font-body text-sm font-medium text-foreground hover:bg-warm transition-colors"
@@ -298,9 +440,15 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
               )}
               <button
                 onClick={handleNext}
-                className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-body text-sm font-medium hover:bg-primary/90 transition-all active:scale-95"
+                disabled={loading}
+                className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-body text-sm font-medium hover:bg-primary/90 transition-all active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                {step === 7 ? (
+                {loading ? (
+                  <>
+                    <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ИИ генерирует урок...
+                  </>
+                ) : step === 7 ? (
                   <>
                     <Icon name="Sparkles" size={16} />
                     Создать урок

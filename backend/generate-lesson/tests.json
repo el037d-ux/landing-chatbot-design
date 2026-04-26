@@ -1,0 +1,27 @@
+{
+  "tests": [
+    {
+      "name": "OPTIONS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200
+    },
+    {
+      "name": "Generate lesson plan",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "subject": "Биология",
+        "grade": "6 класс",
+        "topic": "Фотосинтез",
+        "goal": "Ученики поймут процесс фотосинтеза",
+        "tasks": "Объяснить этапы, провести практику",
+        "plan": "Лекция, практика, квиз",
+        "evaluation": "Наблюдение и квиз"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {"ok": true},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
