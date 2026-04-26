@@ -87,6 +87,239 @@ const FEATURES = [
   { icon: "Clock", title: "Экономия времени", desc: "Подготовка урока занимает 5 минут вместо нескольких часов" },
 ];
 
+const STEPS = [
+  { id: 1, label: "Предмет", icon: "BookOpen", hint: "Например: биология, история, математика" },
+  { id: 2, label: "Класс", icon: "Users", hint: "Выберите класс или укажите возраст аудитории" },
+  { id: 3, label: "Тема", icon: "Lightbulb", hint: "Тема конкретного урока" },
+  { id: 4, label: "Цель урока", icon: "Target", hint: "Чего должны достичь ученики по итогам урока" },
+  { id: 5, label: "Задачи урока", icon: "ListChecks", hint: "Конкретные шаги для достижения цели" },
+  { id: 6, label: "План урока", icon: "LayoutList", hint: "Структура и последовательность этапов" },
+  { id: 7, label: "Оценивание", icon: "BarChart3", hint: "Как вы будете оценивать работу учеников" },
+];
+
+const CLASS_OPTIONS = [
+  "1 класс","2 класс","3 класс","4 класс","5 класс","6 класс","7 класс",
+  "8 класс","9 класс","10 класс","11 класс","Студенты / взрослые",
+];
+
+function LessonWizard({ onClose }: { onClose: () => void }) {
+  const [step, setStep] = useState(1);
+  const [direction, setDirection] = useState<"next" | "prev">("next");
+  const [animating, setAnimating] = useState(false);
+  const [form, setForm] = useState({
+    subject: "",
+    grade: "",
+    topic: "",
+    goal: "",
+    tasks: "",
+    plan: "",
+    evaluation: "",
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const fields = ["subject","grade","topic","goal","tasks","plan","evaluation"] as const;
+
+  const goTo = (next: number, dir: "next" | "prev") => {
+    if (animating) return;
+    setDirection(dir);
+    setAnimating(true);
+    setTimeout(() => {
+      setStep(next);
+      setAnimating(false);
+    }, 220);
+  };
+
+  const handleNext = () => {
+    if (step < 7) goTo(step + 1, "next");
+    else setSubmitted(true);
+  };
+  const handlePrev = () => { if (step > 1) goTo(step - 1, "prev"); };
+
+  const current = STEPS[step - 1];
+  const fieldKey = fields[step - 1];
+  const progress = (step / 7) * 100;
+
+  const slideClass = animating
+    ? direction === "next"
+      ? "opacity-0 translate-x-4"
+      : "opacity-0 -translate-x-4"
+    : "opacity-100 translate-x-0";
+
+  if (submitted) {
+    return (
+      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+        <div
+          className="bg-white rounded-3xl shadow-2xl p-10 max-w-md w-full text-center animate-fade-in-up"
+          onClick={e => e.stopPropagation()}
+        >
+          <div className="w-16 h-16 rounded-2xl bg-green-light flex items-center justify-center mx-auto mb-6">
+            <Icon name="CheckCircle2" size={32} className="text-green" />
+          </div>
+          <h3 className="font-display text-3xl font-semibold text-foreground mb-3">Готово!</h3>
+          <p className="font-body text-muted-foreground mb-2">Ваш урок сохранён. ИИ-помощник уже готовит материалы.</p>
+          <div className="mt-6 p-4 rounded-xl bg-warm text-left space-y-2 mb-6">
+            {STEPS.map((s, i) => (
+              <div key={s.id} className="flex gap-2 text-sm font-body">
+                <span className="text-muted-foreground w-24 flex-shrink-0">{s.label}:</span>
+                <span className="text-foreground font-medium truncate">{form[fields[i]] || "—"}</span>
+              </div>
+            ))}
+          </div>
+          <button
+            onClick={onClose}
+            className="w-full py-3 rounded-xl bg-primary text-white font-body font-medium hover:bg-primary/90 transition-colors"
+          >
+            Закрыть
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
+      <div
+        className="bg-white rounded-3xl shadow-2xl w-full max-w-lg animate-fade-in-up overflow-hidden"
+        onClick={e => e.stopPropagation()}
+      >
+        {/* Header */}
+        <div className="px-8 pt-8 pb-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2.5">
+              <span className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-white text-xs font-bold font-body">У</span>
+              </span>
+              <span className="font-display text-lg font-semibold text-foreground">Создание урока</span>
+            </div>
+            <button onClick={onClose} className="w-8 h-8 rounded-lg hover:bg-warm flex items-center justify-center transition-colors">
+              <Icon name="X" size={16} className="text-muted-foreground" />
+            </button>
+          </div>
+
+          {/* Progress bar */}
+          <div className="relative">
+            <div className="h-1.5 bg-warm rounded-full overflow-hidden">
+              <div
+                className="h-full bg-gradient-to-r from-green to-[hsl(158,45%,60%)] rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+            <div className="flex justify-between mt-2">
+              {STEPS.map((s) => (
+                <button
+                  key={s.id}
+                  onClick={() => goTo(s.id, s.id > step ? "next" : "prev")}
+                  className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                    s.id < step ? "bg-green" : s.id === step ? "bg-green scale-125" : "bg-warm-mid"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Step content */}
+        <div className="px-8 pb-8">
+          <div className={`transition-all duration-200 ease-out ${slideClass}`}>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-green-light flex items-center justify-center">
+                <Icon name={current.icon} fallback="BookOpen" size={20} className="text-green" />
+              </div>
+              <div>
+                <div className="font-body text-xs text-muted-foreground uppercase tracking-wider">Шаг {step} из 7</div>
+                <div className="font-display text-xl font-semibold text-foreground">{current.label}</div>
+              </div>
+            </div>
+
+            {step === 2 ? (
+              <div className="grid grid-cols-3 gap-2 mb-6">
+                {CLASS_OPTIONS.map((cls) => (
+                  <button
+                    key={cls}
+                    onClick={() => setForm(f => ({ ...f, grade: cls }))}
+                    className={`px-3 py-2.5 rounded-xl text-sm font-body font-medium border transition-all ${
+                      form.grade === cls
+                        ? "bg-primary text-white border-primary"
+                        : "bg-white text-foreground border-border hover:border-green/40 hover:bg-green-light"
+                    }`}
+                  >
+                    {cls}
+                  </button>
+                ))}
+              </div>
+            ) : step === 1 ? (
+              <div className="mb-6">
+                <input
+                  type="text"
+                  value={form.subject}
+                  onChange={e => setForm(f => ({ ...f, subject: e.target.value }))}
+                  placeholder={current.hint}
+                  autoFocus
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-warm font-body text-sm focus:outline-none focus:border-green/60 focus:bg-white transition-all placeholder:text-muted-foreground"
+                />
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {["Биология","История","Математика","Русский язык","Физика","Химия","Литература","География"].map(s => (
+                    <button
+                      key={s}
+                      onClick={() => setForm(f => ({ ...f, subject: s }))}
+                      className={`px-3 py-1.5 rounded-full text-xs font-body border transition-all ${
+                        form.subject === s
+                          ? "bg-primary text-white border-primary"
+                          : "bg-white border-border text-muted-foreground hover:border-green/40 hover:text-foreground"
+                      }`}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <textarea
+                value={form[fieldKey]}
+                onChange={e => setForm(f => ({ ...f, [fieldKey]: e.target.value }))}
+                placeholder={current.hint}
+                autoFocus
+                rows={step >= 5 ? 5 : 3}
+                className="w-full px-4 py-3 rounded-xl border border-border bg-warm font-body text-sm focus:outline-none focus:border-green/60 focus:bg-white transition-all placeholder:text-muted-foreground resize-none mb-6"
+              />
+            )}
+
+            {step !== 2 && <div className="mb-6" />}
+
+            <div className="flex gap-3">
+              {step > 1 && (
+                <button
+                  onClick={handlePrev}
+                  className="flex items-center gap-2 px-5 py-3 rounded-xl border border-border font-body text-sm font-medium text-foreground hover:bg-warm transition-colors"
+                >
+                  <Icon name="ChevronLeft" size={16} />
+                  Назад
+                </button>
+              )}
+              <button
+                onClick={handleNext}
+                className="flex-1 flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-primary text-white font-body text-sm font-medium hover:bg-primary/90 transition-all active:scale-95"
+              >
+                {step === 7 ? (
+                  <>
+                    <Icon name="Sparkles" size={16} />
+                    Создать урок
+                  </>
+                ) : (
+                  <>
+                    Далее
+                    <Icon name="ChevronRight" size={16} />
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function useSectionFade() {
   useEffect(() => {
     const els = document.querySelectorAll(".section-fade");
@@ -103,7 +336,7 @@ function useSectionFade() {
   }, []);
 }
 
-function Navbar() {
+function Navbar({ onStart }: { onStart: () => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -151,7 +384,7 @@ function Navbar() {
           <button className="text-sm font-body font-medium text-foreground hover:text-green transition-colors">
             Войти
           </button>
-          <button className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-body font-medium hover:bg-primary/90 transition-colors">
+          <button onClick={onStart} className="px-4 py-2 rounded-lg bg-primary text-white text-sm font-body font-medium hover:bg-primary/90 transition-colors">
             Начать бесплатно
           </button>
         </div>
@@ -178,7 +411,7 @@ function Navbar() {
           ))}
           <div className="pt-2 space-y-2">
             <button className="w-full py-2 text-sm font-body font-medium border border-border rounded-lg">Войти</button>
-            <button className="w-full py-2 text-sm font-body font-medium bg-primary text-white rounded-lg">Начать бесплатно</button>
+            <button onClick={onStart} className="w-full py-2 text-sm font-body font-medium bg-primary text-white rounded-lg">Начать бесплатно</button>
           </div>
         </div>
       )}
@@ -186,7 +419,7 @@ function Navbar() {
   );
 }
 
-function Hero() {
+function Hero({ onStart }: { onStart: () => void }) {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-white via-[hsl(38,30%,98%)] to-[hsl(158,20%,95%)] -z-10" />
@@ -211,7 +444,7 @@ function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-3 mb-10 animate-fade-in-up delay-300">
-            <button className="px-6 py-3 rounded-xl bg-primary text-white font-body font-medium hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20 active:scale-95">
+            <button onClick={onStart} className="px-6 py-3 rounded-xl bg-primary text-white font-body font-medium hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/20 active:scale-95">
               Начать бесплатно
             </button>
             <a href="#demo" className="px-6 py-3 rounded-xl border border-border font-body font-medium text-foreground hover:bg-warm transition-colors flex items-center gap-2">
@@ -576,7 +809,7 @@ function Articles() {
   );
 }
 
-function CTA() {
+function CTA({ onStart }: { onStart: () => void }) {
   return (
     <section className="py-24 bg-primary relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-[hsl(220,15%,8%)] to-[hsl(158,30%,15%)]" />
@@ -593,7 +826,7 @@ function CTA() {
           Присоединяйтесь к тысячам педагогов, которые готовятся к урокам быстрее и увереннее.
         </p>
         <div className="flex flex-wrap justify-center gap-3">
-          <button className="px-8 py-3.5 rounded-xl bg-white text-foreground font-body font-semibold hover:bg-white/90 transition-all hover:shadow-xl hover:shadow-white/10 active:scale-95">
+          <button onClick={onStart} className="px-8 py-3.5 rounded-xl bg-white text-foreground font-body font-semibold hover:bg-white/90 transition-all hover:shadow-xl hover:shadow-white/10 active:scale-95">
             Начать бесплатно
           </button>
           <button className="px-8 py-3.5 rounded-xl border border-white/20 text-white font-body font-medium hover:bg-white/10 transition-colors">
@@ -720,16 +953,18 @@ function Footer() {
 
 export default function Index() {
   useSectionFade();
+  const [wizardOpen, setWizardOpen] = useState(false);
 
   return (
     <div className="min-h-screen">
-      <Navbar />
-      <Hero />
+      {wizardOpen && <LessonWizard onClose={() => setWizardOpen(false)} />}
+      <Navbar onStart={() => setWizardOpen(true)} />
+      <Hero onStart={() => setWizardOpen(true)} />
       <About />
       <ChatDemo />
       <FAQ />
       <Articles />
-      <CTA />
+      <CTA onStart={() => setWizardOpen(true)} />
       <Contacts />
       <Footer />
     </div>
