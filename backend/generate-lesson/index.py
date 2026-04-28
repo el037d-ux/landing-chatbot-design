@@ -5,8 +5,9 @@ import urllib.error
 import re
 
 
-HF_API_URL = "https://router.huggingface.co/v1/chat/completions"
-MODEL = "deepseek-ai/DeepSeek-V4-Pro"
+
+HF_API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
+MODEL = "deepseek-ai/DeepSeek-V3-0324"
 
 
 def handler(event: dict, context) -> dict:
