@@ -7,7 +7,7 @@ import re
 
 
 API_URL = "https://api.aitunnel.ru/v1/chat/completions"
-MODEL = "deepseek-r1"
+MODEL = "gpt-4o-mini"
 
 
 def handler(event: dict, context) -> dict:
