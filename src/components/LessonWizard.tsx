@@ -28,6 +28,60 @@ type LessonPlan = {
   tips: string[];
 };
 
+function downloadLesson(lesson: LessonPlan) {
+  const lines: string[] = [];
+  lines.push(`ПЛАН УРОКА: ${lesson.title}`);
+  lines.push(`Длительность: ${lesson.duration}`);
+  lines.push(`\n${lesson.overview}`);
+
+  lines.push(`\n${"=".repeat(50)}`);
+  lines.push("ЭТАПЫ УРОКА");
+  lines.push("=".repeat(50));
+  lesson.stages.forEach((s, i) => {
+    lines.push(`\n${i + 1}. ${s.name} (${s.duration})`);
+    lines.push(s.description);
+    if (s.method) lines.push(`Метод: ${s.method}`);
+    if (s.materials) lines.push(`Материалы: ${s.materials}`);
+  });
+
+  lines.push(`\n${"=".repeat(50)}`);
+  lines.push("АКТИВНОСТИ");
+  lines.push("=".repeat(50));
+  lesson.activities.forEach((a, i) => {
+    lines.push(`\n${i + 1}. ${a.title} [${a.type}] — ${a.duration}`);
+    lines.push(a.description);
+  });
+
+  lines.push(`\n${"=".repeat(50)}`);
+  lines.push("ОЦЕНИВАНИЕ");
+  lines.push("=".repeat(50));
+  lines.push("\nМетоды: " + lesson.assessment.methods.join(", "));
+  lines.push("Критерии:\n" + lesson.assessment.criteria.map((c, i) => `  ${i + 1}. ${c}`).join("\n"));
+  if (lesson.assessment.tools) lines.push(`Инструменты: ${lesson.assessment.tools}`);
+
+  if (lesson.homework) {
+    lines.push(`\n${"=".repeat(50)}`);
+    lines.push("ДОМАШНЕЕ ЗАДАНИЕ");
+    lines.push("=".repeat(50));
+    lines.push(lesson.homework);
+  }
+
+  if (lesson.tips?.length) {
+    lines.push(`\n${"=".repeat(50)}`);
+    lines.push("СОВЕТЫ ПЕДАГОГУ");
+    lines.push("=".repeat(50));
+    lesson.tips.forEach((t, i) => lines.push(`${i + 1}. ${t}`));
+  }
+
+  const blob = new Blob([lines.join("\n")], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${lesson.title.replace(/[^\wа-яёА-ЯЁ\s]/gi, "").trim()}.txt`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => void }) {
   const [tab, setTab] = useState<"stages" | "activities" | "assessment">("stages");
   return (
@@ -135,8 +189,17 @@ function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => 
         </div>
 
         {/* Footer */}
+        <div className="px-8 py-4 border-t border-border flex-shrink-0">
+          <button
+            onClick={() => downloadLesson(lesson)}
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-primary text-white font-body text-sm font-medium hover:bg-primary/90 transition-all active:scale-95"
+          >
+            <Icon name="Download" size={16} />
+            Скачать готовый урок
+          </button>
+        </div>
         {(lesson.homework || (lesson.tips && lesson.tips.length > 0)) && (
-          <div className="px-8 py-5 border-t border-border flex-shrink-0 space-y-3">
+          <div className="px-8 pb-5 flex-shrink-0 space-y-3">
             {lesson.homework && (
               <div className="flex items-start gap-2.5 p-3 rounded-xl bg-[hsl(38,50%,93%)]">
                 <Icon name="BookOpen" size={16} className="text-[hsl(38,60%,40%)] flex-shrink-0 mt-0.5" />
