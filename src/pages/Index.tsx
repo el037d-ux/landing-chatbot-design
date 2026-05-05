@@ -91,9 +91,12 @@ const GENERATE_LESSON_URL = "https://functions.poehali.dev/1186dab1-1c68-4be5-95
 
 const STEPS = [
   { id: 1, label: "Предмет / дисциплина", icon: "BookOpen", hint: "Например: биология, история, математика" },
-  { id: 2, label: "Класс", icon: "Users", hint: "Выберите класс или укажите возраст аудитории" },
+  { id: 2, label: "Класс / курс", icon: "Users", hint: "Выберите класс или укажите возраст аудитории" },
   { id: 3, label: "Тема урока", icon: "Lightbulb", hint: "Тема конкретного урока" },
+  { id: 4, label: "Длительность урока", icon: "Clock", hint: "Выберите длительность" },
 ];
+
+const DURATION_OPTIONS = ["45 мин", "90 мин"];
 
 const CLASS_OPTIONS = [
   "1 класс","2 класс","3 класс","4 класс","5 класс","6 класс","7 класс",
@@ -258,12 +261,13 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
     subject: "",
     grade: "",
     topic: "",
+    duration: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [lesson, setLesson] = useState<LessonPlan | null>(null);
 
-  const fields = ["subject","grade","topic"] as const;
+  const fields = ["subject","grade","topic","duration"] as const;
 
   const goTo = (next: number, dir: "next" | "prev") => {
     if (animating) return;
@@ -276,7 +280,7 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
   };
 
   const handleNext = async () => {
-    if (step < 3) { goTo(step + 1, "next"); return; }
+    if (step < 4) { goTo(step + 1, "next"); return; }
     setLoading(true);
     setError("");
     try {
@@ -301,7 +305,7 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
 
   const current = STEPS[step - 1];
   const fieldKey = fields[step - 1];
-  const progress = (step / 3) * 100;
+  const progress = (step / 4) * 100;
   const slideClass = animating
     ? direction === "next" ? "opacity-0 translate-x-4" : "opacity-0 -translate-x-4"
     : "opacity-100 translate-x-0";
@@ -360,12 +364,28 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
                 <Icon name={current.icon} fallback="BookOpen" size={20} className="text-green" />
               </div>
               <div>
-                <div className="font-body text-xs text-muted-foreground uppercase tracking-wider">Шаг {step} из 3</div>
+                <div className="font-body text-xs text-muted-foreground uppercase tracking-wider">Шаг {step} из 4</div>
                 <div className="font-display text-xl font-semibold text-foreground">{current.label}</div>
               </div>
             </div>
 
-            {step === 2 ? (
+            {step === 4 ? (
+              <div className="flex gap-4 mb-6">
+                {DURATION_OPTIONS.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setForm(f => ({ ...f, duration: d }))}
+                    className={`flex-1 py-4 rounded-xl text-base font-body font-semibold border transition-all ${
+                      form.duration === d
+                        ? "bg-primary text-white border-primary"
+                        : "bg-white text-foreground border-border hover:border-green/40 hover:bg-green-light"
+                    }`}
+                  >
+                    {d}
+                  </button>
+                ))}
+              </div>
+            ) : step === 2 ? (
               <div className="grid grid-cols-3 gap-2 mb-6">
                 {CLASS_OPTIONS.map((cls) => (
                   <button
@@ -418,7 +438,7 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
               />
             )}
 
-            {step !== 2 && <div className="mb-6" />}
+            {step !== 2 && step !== 4 && <div className="mb-6" />}
 
             {error && (
               <div className="mb-4 px-4 py-3 rounded-xl bg-destructive/10 border border-destructive/20 flex items-center gap-2">
@@ -447,7 +467,7 @@ function LessonWizard({ onClose }: { onClose: () => void }) {
                     <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                     ИИ генерирует урок...
                   </>
-                ) : step === 3 ? (
+                ) : step === 4 ? (
                   <>
                     <Icon name="Sparkles" size={16} />
                     Создать урок
