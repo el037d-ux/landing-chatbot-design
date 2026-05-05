@@ -7,7 +7,7 @@ import re
 
 
 API_URL = "https://api.aitunnel.ru/v1/chat/completions"
-MODEL = "gpt-4o"  # v2
+MODEL = "gpt-4o"  # v3
 
 
 def handler(event: dict, context) -> dict:
