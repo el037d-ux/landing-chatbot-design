@@ -7,25 +7,43 @@ import re
 
 
 API_URL = "https://api.aitunnel.ru/v1/chat/completions"
-MODEL = "gpt-4o-mini"
+MODEL = "gpt-4.5-preview"
 
 
 def handler(event: dict, context) -> dict:
-    """Генерирует план урока с помощью DeepSeek-V4-Pro через HuggingFace на основе данных от педагога."""
+    """Генерирует план урока с помощью ИИ через AITunnel на основе данных от педагога."""
 
     if event.get('httpMethod') == 'OPTIONS':
         return {
             'statusCode': 200,
             'headers': {
                 'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
                 'Access-Control-Allow-Headers': 'Content-Type',
                 'Access-Control-Max-Age': '86400',
             },
             'body': ''
         }
 
+    api_key = os.environ.get('AITUNNEL_API_KEY', '')
+
     body = json.loads(event.get('body') or '{}')
+
+    if body.get('action') == 'list_models':
+        req = urllib.request.Request(
+            'https://api.aitunnel.ru/v1/models',
+            headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+            method='GET'
+        )
+        with urllib.request.urlopen(req, timeout=10) as resp:
+            models_data = json.loads(resp.read().decode('utf-8'))
+        model_ids = [m['id'] for m in models_data.get('data', [])]
+        print(f"[MODELS] {model_ids}")
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+            'body': json.dumps({'models': model_ids}, ensure_ascii=False)
+        }
     subject = body.get('subject', '')
     grade = body.get('grade', '')
     topic = body.get('topic', '')
@@ -81,10 +99,6 @@ def handler(event: dict, context) -> dict:
 
 Сделай план живым, практичным и вдохновляющим. Учти возраст учеников ({grade}), специфику предмета ({subject}) и строго укладывайся в {duration}."""
 
-    api_keys = [
-        os.environ.get('AITUNNEL_API_KEY', ''),
-    ]
-
     request_body = json.dumps({
         'model': MODEL,
         'messages': [
@@ -95,33 +109,17 @@ def handler(event: dict, context) -> dict:
         'max_tokens': 2000,
     }).encode('utf-8')
 
-    result = None
-    last_error = None
-    for api_key in api_keys:
-        if not api_key:
-            continue
-        try:
-            req = urllib.request.Request(
-                API_URL,
-                data=request_body,
-                headers={
-                    'Authorization': f'Bearer {api_key}',
-                    'Content-Type': 'application/json',
-                },
-                method='POST'
-            )
-            with urllib.request.urlopen(req, timeout=60) as response:
-                result = json.loads(response.read().decode('utf-8'))
-            break
-        except urllib.error.HTTPError as e:
-            error_body = e.read().decode('utf-8', errors='replace')
-            print(f"[KEY_TRY] code={e.code} key_prefix={api_key[:12]} body={error_body[:300]}")
-            last_error = e
-            if e.code not in (401, 403):
-                raise
-
-    if result is None:
-        raise last_error
+    req = urllib.request.Request(
+        API_URL,
+        data=request_body,
+        headers={
+            'Authorization': f'Bearer {api_key}',
+            'Content-Type': 'application/json',
+        },
+        method='POST'
+    )
+    with urllib.request.urlopen(req, timeout=60) as response:
+        result = json.loads(response.read().decode('utf-8'))
 
     content = result['choices'][0]['message']['content']
 

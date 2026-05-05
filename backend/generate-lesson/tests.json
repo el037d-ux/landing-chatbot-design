@@ -7,20 +7,12 @@
       "expectedStatus": 200
     },
     {
-      "name": "Generate lesson plan",
+      "name": "List models",
       "method": "POST",
       "path": "/",
-      "body": {
-        "subject": "Биология",
-        "grade": "6 класс",
-        "topic": "Фотосинтез",
-        "goal": "Ученики поймут процесс фотосинтеза",
-        "tasks": "Объяснить этапы, провести практику",
-        "plan": "Лекция, практика, квиз",
-        "evaluation": "Наблюдение и квиз"
-      },
+      "body": {"action": "list_models"},
       "expectedStatus": 200,
-      "expectedBody": {"ok": true},
+      "expectedBody": {"models": []},
       "bodyMatcher": "partial"
     }
   ]
