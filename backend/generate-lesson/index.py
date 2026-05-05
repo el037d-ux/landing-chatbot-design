@@ -6,8 +6,8 @@ import re
 
 
 
-HF_API_URL = "https://router.huggingface.co/novita/v3/openai/chat/completions"
-MODEL = "deepseek-ai/DeepSeek-V3-0324"
+API_URL = "https://api.aitunnel.ru/v1/chat/completions"
+MODEL = "gpt-4o-mini"
 
 
 def handler(event: dict, context) -> dict:
@@ -105,7 +105,7 @@ def handler(event: dict, context) -> dict:
             continue
         try:
             req = urllib.request.Request(
-                HF_API_URL,
+                API_URL,
                 data=request_body,
                 headers={
                     'Authorization': f'Bearer {api_key}',
@@ -117,8 +117,10 @@ def handler(event: dict, context) -> dict:
                 result = json.loads(response.read().decode('utf-8'))
             break
         except urllib.error.HTTPError as e:
+            error_body = e.read().decode('utf-8', errors='replace')
+            print(f"[KEY_TRY] code={e.code} key_prefix={api_key[:12]} body={error_body[:300]}")
             last_error = e
-            if e.code != 401:
+            if e.code not in (401, 403):
                 raise
 
     if result is None:
