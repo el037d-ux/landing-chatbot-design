@@ -3,16 +3,18 @@ import Icon from "@/components/ui/icon";
 
 const GENERATE_LESSON_URL = "https://functions.poehali.dev/1186dab1-1c68-4be5-95d4-74d1e710571e";
 
-const TOTAL_STEPS = 7;
+const TOTAL_STEPS = 9;
 
 const STEPS = [
-  { id: 1, label: "Тема урока", icon: "BookOpen", hint: "Укажите тему конкретного урока" },
-  { id: 2, label: "Цель урока", icon: "Target", hint: "Чего должны достичь ученики по итогу урока?" },
-  { id: 3, label: "Задачи урока", icon: "ListChecks", hint: "Образовательные, развивающие и воспитательные задачи" },
-  { id: 4, label: "Методическое и техническое оснащение", icon: "Wrench", hint: "Учебники, пособия, оборудование, ИКТ и т.д." },
-  { id: 5, label: "Технология обучения", icon: "Layers", hint: "Например: проблемное обучение, ИКТ, игровая, кейс-метод" },
-  { id: 6, label: "Класс / курс", icon: "Users", hint: "Выберите класс или укажите возраст аудитории" },
-  { id: 7, label: "Длительность урока", icon: "Clock", hint: "Выберите длительность" },
+  { id: 1, label: "Предмет / дисциплина", icon: "BookOpen", hint: "Например: биология, история, математика" },
+  { id: 2, label: "Класс / группа", icon: "Users", hint: "Выберите класс или укажите возраст аудитории" },
+  { id: 3, label: "Особенности группы", icon: "Star", hint: "Опишите особенности или выберите готовый вариант" },
+  { id: 4, label: "Тема урока", icon: "Lightbulb", hint: "Укажите тему конкретного урока" },
+  { id: 5, label: "Цель урока", icon: "Target", hint: "Чего должны достичь ученики по итогу урока?" },
+  { id: 6, label: "Задачи урока", icon: "ListChecks", hint: "Образовательные, развивающие и воспитательные задачи" },
+  { id: 7, label: "Методическое и техническое оснащение", icon: "Wrench", hint: "Учебники, пособия, оборудование, ИКТ и т.д." },
+  { id: 8, label: "Технология обучения", icon: "Layers", hint: "Например: проблемное обучение, ИКТ, игровая, кейс-метод" },
+  { id: 9, label: "Длительность урока", icon: "Clock", hint: "Выберите длительность" },
 ];
 
 const DURATION_OPTIONS = ["45 мин", "90 мин"];
@@ -251,12 +253,14 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
   const [direction, setDirection] = useState<"next" | "prev">("next");
   const [animating, setAnimating] = useState(false);
   const [form, setForm] = useState({
+    subject: "",
+    grade: "",
+    group_features: "",
     topic: "",
     goal: "",
     tasks: "",
     equipment: "",
     technology: "",
-    grade: "",
     duration: "",
   });
   const [loading, setLoading] = useState(false);
@@ -306,13 +310,13 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
 
   // Текущее значение поля
   const fieldMap: Record<number, keyof typeof form> = {
-    1: "topic", 2: "goal", 3: "tasks", 4: "equipment", 5: "technology",
+    1: "subject", 3: "group_features", 4: "topic", 5: "goal", 6: "tasks", 7: "equipment", 8: "technology",
   };
   const currentFieldKey = fieldMap[step];
 
   const canProceed = () => {
-    if (step === 6) return !!form.grade;
-    if (step === 7) return !!form.duration;
+    if (step === 2) return !!form.grade;
+    if (step === 9) return !!form.duration;
     if (currentFieldKey) return !!form[currentFieldKey].trim();
     return true;
   };
@@ -376,8 +380,8 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
               </div>
             </div>
 
-            {/* Шаг 6 — класс */}
-            {step === 6 ? (
+            {/* Шаг 2 — класс/группа */}
+            {step === 2 ? (
               <div className="grid grid-cols-3 gap-2 mb-6">
                 {CLASS_OPTIONS.map((cls) => (
                   <button
@@ -393,8 +397,53 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
                   </button>
                 ))}
               </div>
-            ) : step === 7 ? (
-              /* Шаг 7 — длительность */
+            ) : step === 3 ? (
+              /* Шаг 3 — особенности группы */
+              <div className="mb-6">
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {[
+                    "Активность высокая",
+                    "Активность низкая",
+                    "Смешанный уровень",
+                    "Сильные ученики",
+                    "Слабые ученики",
+                    "Любят практику",
+                    "Любят игры",
+                    "Дисциплина хорошая",
+                    "Дисциплина слабая",
+                  ].map(opt => (
+                    <button
+                      key={opt}
+                      onClick={() => {
+                        const current = form.group_features;
+                        const already = current.includes(opt);
+                        setForm(f => ({
+                          ...f,
+                          group_features: already
+                            ? current.replace(opt, "").replace(/,\s*,/g, ",").replace(/^,\s*|,\s*$/g, "").trim()
+                            : current ? `${current}, ${opt}` : opt
+                        }));
+                      }}
+                      className={`px-3 py-1.5 rounded-full text-xs font-body border transition-all ${
+                        form.group_features.includes(opt)
+                          ? "bg-primary text-white border-primary"
+                          : "bg-white border-border text-muted-foreground hover:border-primary/30 hover:bg-indigo-light"
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+                <textarea
+                  value={form.group_features}
+                  onChange={e => setForm(f => ({ ...f, group_features: e.target.value }))}
+                  placeholder="Или опишите особенности группы своими словами..."
+                  rows={2}
+                  className="w-full px-4 py-3 rounded-xl border border-border bg-slate font-body text-sm focus:outline-none focus:border-primary/40 focus:bg-white focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-muted-foreground resize-none"
+                />
+              </div>
+            ) : step === 9 ? (
+              /* Шаг 9 — длительность */
               <div className="flex gap-4 mb-6">
                 {DURATION_OPTIONS.map((d) => (
                   <button
@@ -418,7 +467,7 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
                   onChange={e => setForm(f => ({ ...f, [currentFieldKey]: e.target.value }))}
                   placeholder={current.hint}
                   autoFocus
-                  rows={step === 1 ? 2 : 4}
+                  rows={step === 1 || step === 4 ? 2 : 4}
                   className="w-full px-4 py-3 rounded-xl border border-border bg-slate font-body text-sm focus:outline-none focus:border-primary/40 focus:bg-white focus:ring-2 focus:ring-primary/10 transition-all placeholder:text-muted-foreground resize-none"
                 />
                 {step === 1 && (
@@ -426,9 +475,9 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
                     {["Биология","История","Математика","Русский язык","Физика","Химия","Литература","География","Информатика"].map(s => (
                       <button
                         key={s}
-                        onClick={() => setForm(f => ({ ...f, topic: s }))}
+                        onClick={() => setForm(f => ({ ...f, subject: s }))}
                         className={`px-3 py-1.5 rounded-full text-xs font-body border transition-all ${
-                          form.topic === s
+                          form.subject === s
                             ? "bg-primary text-white border-primary"
                             : "bg-white border-border text-muted-foreground hover:border-primary/30 hover:bg-indigo-light"
                         }`}
@@ -438,7 +487,7 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
                     ))}
                   </div>
                 )}
-                {step === 5 && (
+                {step === 8 && (
                   <div className="flex flex-wrap gap-2 mt-3">
                     {["Проблемное обучение","ИКТ-технологии","Игровая технология","Кейс-метод","Проектная деятельность","Развивающее обучение"].map(t => (
                       <button

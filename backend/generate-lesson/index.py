@@ -26,23 +26,29 @@ def handler(event: dict, context) -> dict:
     api_key = os.environ.get('AITUNNEL_API_KEY', '')
     body = json.loads(event.get('body') or '{}')
 
+    subject = body.get('subject', '')
+    grade = body.get('grade', '')
+    group_features = body.get('group_features', '')
     topic = body.get('topic', '')
     goal = body.get('goal', '')
     tasks = body.get('tasks', '')
     equipment = body.get('equipment', '')
     technology = body.get('technology', '')
-    grade = body.get('grade', '')
     duration = body.get('duration', '45 мин')
 
     prompt = f"""Ты опытный методист с 20-летним стажем. Составь подробную технологическую карту урока по следующим данным:
 
-- Тема: {topic}
+- Предмет: {subject}
 - Класс: {grade}
+- Особенности группы: {group_features}
+- Тема урока: {topic}
 - Длительность: {duration}
 - Цель урока: {goal}
 - Задачи: {tasks}
 - Методическое и техническое оснащение: {equipment}
 - Технология обучения: {technology}
+
+Обязательно учти особенности группы ({group_features}) при описании действий учителя и учеников на каждом этапе.
 
 Сгенерируй технологическую карту строго в JSON-формате (только JSON, без markdown-блоков):
 {{
