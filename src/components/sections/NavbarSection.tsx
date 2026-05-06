@@ -128,7 +128,7 @@ function Hero({ onStart }: { onStart: () => void }) {
             {[
               { n: "4 000+", l: "педагогов", color: "text-primary" },
               { n: "50 000+", l: "уроков создано", color: "text-teal" },
-              { n: "Google & Teams", l: "интеграции", color: "text-amber" },
+              { n: "5 мин", l: "на подготовку урока", color: "text-amber" },
             ].map((s) => (
               <div key={s.l}>
                 <div className={`font-display text-2xl font-bold ${s.color}`}>{s.n}</div>
