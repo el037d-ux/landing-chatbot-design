@@ -123,34 +123,7 @@ function About() {
           ))}
         </div>
 
-        <div className="section-fade mt-16 rounded-2xl overflow-hidden bg-slate relative">
-          <div className="grid lg:grid-cols-2 gap-0">
-            <div className="p-10 lg:p-14">
-              <span className="inline-block px-3 py-1 rounded-full badge-amber text-xs font-body font-semibold uppercase tracking-wider mb-4">Интеграции</span>
-              <h3 className="font-display text-3xl font-bold mt-3 mb-4 text-foreground">
-                Работает с вашими любимыми платформами
-              </h3>
-              <p className="font-body text-muted-foreground mb-6 leading-relaxed">
-                Экспортируйте готовые материалы напрямую в Google Classroom, Microsoft Teams, Moodle и другие LMS.
-              </p>
-              <div className="flex flex-wrap gap-3">
-                {["Google Classroom", "Microsoft Teams", "Moodle", "Edmodo"].map((p) => (
-                  <span key={p} className="px-3 py-1.5 rounded-full bg-white border border-border font-body text-sm font-medium text-foreground shadow-sm">
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-            <div className="relative overflow-hidden">
-              <img
-                src={STUDENTS_IMAGE}
-                alt="Интеграции с платформами"
-                className="w-full h-full object-cover min-h-[280px]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-slate/80 to-transparent lg:from-transparent" />
-            </div>
-          </div>
-        </div>
+
       </div>
     </section>
   );
