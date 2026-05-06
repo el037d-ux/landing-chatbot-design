@@ -7,7 +7,7 @@ import re
 
 
 API_URL = "https://api.aitunnel.ru/v1/chat/completions"
-MODEL = "gpt-4.5-preview"
+MODEL = "gpt-4o-mini"
 
 
 def handler(event: dict, context) -> dict:
@@ -25,7 +25,13 @@ def handler(event: dict, context) -> dict:
             'body': ''
         }
 
-    api_key = os.environ.get('AITUNNEL_API_KEY', '')
+    api_keys = [
+        os.environ.get('SKAITUNNELRBPZJ8RKNKNPSD5QXPMHYIX8SFXT31EZ', ''),
+        os.environ.get('SKAITUNNELDXV2LRANTQXXAUHAKKHDIJCMX5UANI87', ''),
+        os.environ.get('AITUNNEL_API_KEY', ''),
+        os.environ.get('AITUNNEL', ''),
+    ]
+    api_key = next((k for k in api_keys if k.startswith('sk-')), '')
 
     body = json.loads(event.get('body') or '{}')
 
