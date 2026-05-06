@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import LandingLayout from "@/components/LandingLayout";
 import LessonWizard from "@/components/LessonWizard";
+import GameWizard from "@/components/GameWizard";
 import AuthModal from "@/components/AuthModal";
 
 function useSectionFade() {
@@ -22,13 +23,15 @@ function useSectionFade() {
 export default function Index() {
   useSectionFade();
   const [wizardOpen, setWizardOpen] = useState(false);
+  const [gameOpen, setGameOpen] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
 
   return (
     <div className="min-h-screen">
       {wizardOpen && <LessonWizard onClose={() => setWizardOpen(false)} />}
+      {gameOpen && <GameWizard onClose={() => setGameOpen(false)} />}
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
-      <LandingLayout onStart={() => setWizardOpen(true)} onAuth={() => setAuthOpen(true)} />
+      <LandingLayout onStart={() => setWizardOpen(true)} onGame={() => setGameOpen(true)} onAuth={() => setAuthOpen(true)} />
     </div>
   );
 }

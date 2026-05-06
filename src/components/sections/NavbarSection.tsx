@@ -83,7 +83,7 @@ function Navbar({ onStart, onAuth }: { onStart: () => void; onAuth: () => void }
   );
 }
 
-function Hero({ onStart }: { onStart: () => void }) {
+function Hero({ onStart, onGame }: { onStart: () => void; onGame: () => void }) {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-indigo-light/40 to-teal-light/30 -z-10" />
@@ -115,13 +115,13 @@ function Hero({ onStart }: { onStart: () => void }) {
             >
               Начать бесплатно
             </button>
-            <a
-              href="#demo"
-              className="px-6 py-3 rounded-xl border border-border font-body font-medium text-foreground hover:bg-slate transition-colors flex items-center gap-2"
+            <button
+              onClick={onGame}
+              className="px-6 py-3 rounded-xl bg-amber text-foreground font-body font-semibold hover:bg-amber/90 transition-all hover:shadow-lg hover:shadow-amber/25 active:scale-95 flex items-center gap-2"
             >
-              <Icon name="Play" size={16} />
-              Посмотреть демо
-            </a>
+              <Icon name="Gamepad2" size={16} />
+              Придумай игру на урок
+            </button>
           </div>
 
           <div className="flex flex-wrap gap-6 animate-fade-in-up delay-400">
