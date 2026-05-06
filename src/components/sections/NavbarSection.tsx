@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
 
-const HERO_IMAGE = "https://cdn.poehali.dev/projects/3a27d5a9-016a-43ab-946d-4c4fe8129705/files/5cb7a4de-e92e-4340-931f-a351c3e47385.jpg";
+const HERO_IMAGE = "https://cdn.poehali.dev/projects/3a27d5a9-016a-43ab-946d-4c4fe8129705/files/003c7354-219e-4eac-881c-bb5ce79d7c37.jpg";
 
 function Navbar({ onStart, onAuth }: { onStart: () => void; onAuth: () => void }) {
   const [scrolled, setScrolled] = useState(false);
