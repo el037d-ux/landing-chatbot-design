@@ -38,66 +38,18 @@ function CTA({ onStart }: { onStart: () => void }) {
 
 function Contacts() {
   return (
-    <section id="contacts" className="py-24 bg-white">
+    <section id="contacts" className="py-16 bg-white">
       <div className="container max-w-6xl mx-auto px-6">
-        <div className="section-fade text-center mb-14">
-          <span className="inline-block px-3 py-1 rounded-full badge-indigo text-xs font-body font-semibold uppercase tracking-wider mb-4">Контакты</span>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 mb-4 text-foreground">
-            Мы рядом
-          </h2>
-          <p className="font-body text-lg text-muted-foreground max-w-xl mx-auto">
-            Есть вопросы или хотите договориться о демонстрации для вашей школы?
-          </p>
-        </div>
-
-        <div className="section-fade grid md:grid-cols-3 gap-6 mb-12">
-          {[
-            { icon: "Mail", title: "Email", val: "hello@urokii.ru", desc: "Ответим в течение рабочего дня", color: "bg-indigo-light text-primary" },
-            { icon: "MessageSquare", title: "Telegram", val: "@urokii_support", desc: "Быстрая помощь в чате", color: "bg-teal-light text-teal" },
-            { icon: "Phone", title: "Телефон", val: "+7 800 123-45-67", desc: "Пн–Пт, 9:00–18:00 МСК", color: "bg-amber-light text-amber" },
-          ].map((c) => (
-            <div key={c.title} className="p-6 rounded-2xl border border-border text-center hover:border-primary/20 hover:shadow-lg hover:shadow-primary/8 transition-all group">
-              <div className={`w-12 h-12 rounded-2xl ${c.color} flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110 duration-200`}>
-                <Icon name={c.icon} fallback="Mail" size={22} />
-              </div>
-              <div className="font-body font-semibold text-foreground mb-1">{c.title}</div>
-              <div className="font-body font-medium text-primary mb-1">{c.val}</div>
-              <div className="font-body text-sm text-muted-foreground">{c.desc}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="section-fade max-w-lg mx-auto bg-slate rounded-2xl p-8">
-          <h3 className="font-display text-2xl font-bold text-foreground mb-6">Написать нам</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="font-body text-sm font-medium text-foreground mb-1.5 block">Ваше имя</label>
-              <input
-                type="text"
-                placeholder="Иван Иванов"
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-sm focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-all"
-              />
-            </div>
-            <div>
-              <label className="font-body text-sm font-medium text-foreground mb-1.5 block">Email</label>
-              <input
-                type="email"
-                placeholder="ivan@school.ru"
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-sm focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-all"
-              />
-            </div>
-            <div>
-              <label className="font-body text-sm font-medium text-foreground mb-1.5 block">Сообщение</label>
-              <textarea
-                rows={4}
-                placeholder="Расскажите, чем мы можем помочь..."
-                className="w-full px-4 py-2.5 rounded-xl border border-border bg-white font-body text-sm focus:outline-none focus:border-primary/40 focus:ring-2 focus:ring-primary/10 transition-all resize-none"
-              />
-            </div>
-            <button className="w-full py-3 rounded-xl bg-primary text-white font-body font-semibold hover:bg-primary/90 transition-colors shadow-md shadow-primary/25">
-              Отправить сообщение
-            </button>
-          </div>
+        <div className="section-fade flex flex-col sm:flex-row items-center justify-center gap-4">
+          <span className="font-body text-muted-foreground">Есть вопросы?</span>
+          <a
+            href="mailto:en1350@rambler.ru"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl bg-primary text-white font-body font-semibold hover:bg-primary/90 transition-all shadow-md shadow-primary/25 active:scale-95"
+          >
+            <Icon name="Mail" size={16} className="text-white" />
+            Написать нам
+          </a>
+          <span className="font-body text-sm text-muted-foreground">en1350@rambler.ru</span>
         </div>
       </div>
     </section>
