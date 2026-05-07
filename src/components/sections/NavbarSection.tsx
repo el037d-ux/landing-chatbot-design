@@ -83,7 +83,7 @@ function Navbar({ onStart, onAuth }: { onStart: () => void; onAuth: () => void }
   );
 }
 
-function Hero({ onStart, onGame, onAnalysis, onPayment }: { onStart: () => void; onGame: () => void; onAnalysis: () => void; onPayment: () => void }) {
+function Hero({ onStart, onGame, onAnalysis, onPayment, lessonsLeft, gamesLeft, isPaid }: { onStart: () => void; onGame: () => void; onAnalysis: () => void; onPayment: () => void; lessonsLeft: number | null; gamesLeft: number | null; isPaid: boolean }) {
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-indigo-light/40 to-teal-light/30 -z-10" />
@@ -108,43 +108,68 @@ function Hero({ onStart, onGame, onAnalysis, onPayment }: { onStart: () => void;
             Опишите тему, возраст учеников и предмет — УрокАИ предложит идеи активностей, методы оценивания и готовый план урока за секунды.
           </p>
 
-          <div className="flex flex-wrap gap-3 mb-10 animate-fade-in-up delay-300">
+          {/* Три главные кнопки */}
+          <div className="grid sm:grid-cols-3 gap-3 mb-6 animate-fade-in-up delay-300">
+            {/* Генератор урока */}
             <button
               onClick={onStart}
-              className="px-6 py-3 rounded-xl bg-primary text-white font-body font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/25 active:scale-95"
+              className="flex flex-col items-center gap-2 px-4 py-4 rounded-2xl bg-primary text-white font-body font-semibold hover:bg-primary/90 transition-all hover:shadow-lg hover:shadow-primary/25 active:scale-95 group"
             >
-              Начать бесплатно
+              <span className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center group-hover:bg-white/30 transition-colors">
+                <Icon name="BookOpen" size={20} className="text-white" />
+              </span>
+              <span className="text-sm font-bold">Генератор урока</span>
+              {!isPaid && lessonsLeft !== null && (
+                <span className="text-xs font-body font-normal opacity-80">
+                  {lessonsLeft > 0 ? `Осталось бесплатно: ${lessonsLeft}` : "Лимит исчерпан"}
+                </span>
+              )}
+              {isPaid && <span className="text-xs font-body font-normal opacity-80">Безлимитно</span>}
             </button>
+
+            {/* Генератор игры */}
             <button
               onClick={onGame}
-              className="px-6 py-3 rounded-xl bg-amber text-foreground font-body font-semibold hover:bg-amber/90 transition-all hover:shadow-lg hover:shadow-amber/25 active:scale-95 flex items-center gap-2"
+              className="flex flex-col items-center gap-2 px-4 py-4 rounded-2xl bg-amber text-foreground font-body font-semibold hover:bg-amber/90 transition-all hover:shadow-lg hover:shadow-amber/25 active:scale-95 group"
             >
-              <Icon name="Gamepad2" size={16} />
-              Придумай игру на урок
+              <span className="w-10 h-10 rounded-xl bg-black/10 flex items-center justify-center group-hover:bg-black/15 transition-colors">
+                <Icon name="Gamepad2" size={20} className="text-foreground" />
+              </span>
+              <span className="text-sm font-bold">Генератор игры</span>
+              {!isPaid && gamesLeft !== null && (
+                <span className="text-xs font-body font-normal opacity-70">
+                  {gamesLeft > 0 ? `Осталось бесплатно: ${gamesLeft}` : "Лимит исчерпан"}
+                </span>
+              )}
+              {isPaid && <span className="text-xs font-body font-normal opacity-70">Безлимитно</span>}
             </button>
+
+            {/* Тарифы */}
+            <button
+              onClick={onPayment}
+              className="flex flex-col items-center gap-2 px-4 py-4 rounded-2xl bg-white border-2 border-primary/20 text-foreground font-body font-semibold hover:border-primary/50 hover:shadow-lg transition-all active:scale-95 group"
+            >
+              <span className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                <Icon name="Crown" size={20} className="text-primary" />
+              </span>
+              <span className="text-sm font-bold text-primary">Тарифы</span>
+              <span className="text-xs font-body font-normal text-muted-foreground">7 дней — 69₽</span>
+            </button>
+          </div>
+
+          {/* Самоанализ — под кнопками */}
+          <div className="mb-8 animate-fade-in-up delay-400">
             <button
               onClick={onAnalysis}
-              className="px-6 py-3 rounded-xl border-2 border-teal text-teal font-body font-semibold hover:bg-teal hover:text-white transition-all active:scale-95 flex items-center gap-2"
+              className="flex items-center gap-3 px-5 py-3 rounded-xl border-2 border-teal/40 bg-teal-light text-teal font-body font-semibold hover:border-teal hover:bg-teal hover:text-white transition-all active:scale-95 w-full sm:w-auto"
             >
-              <Icon name="FileText" size={16} />
-              Самоанализ урока
+              <Icon name="FileText" size={18} />
+              <span>Самоанализ урока</span>
+              <span className="ml-auto text-xs font-normal opacity-70 bg-teal/10 hover:bg-white/20 px-2 py-0.5 rounded-full">только для подписчиков</span>
             </button>
           </div>
 
-          {/* Прейскурант */}
-          <div className="flex flex-wrap gap-3 animate-fade-in-up delay-500">
-            <button onClick={onPayment} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white border border-border shadow-sm hover:border-primary/30 hover:shadow-md transition-all">
-              <span className="w-6 h-6 rounded-lg bg-primary flex items-center justify-center flex-shrink-0">
-                <Icon name="Crown" size={12} className="text-white" />
-              </span>
-              <div className="text-left">
-                <div className="font-body text-xs font-bold text-foreground">7 дней — 69₽</div>
-                <div className="font-body text-xs text-muted-foreground">30 дней — 260₽</div>
-              </div>
-            </button>
-          </div>
-
-          <div className="flex flex-wrap gap-6 animate-fade-in-up delay-400">
+          <div className="flex flex-wrap gap-6 animate-fade-in-up delay-500">
             {[
               { n: "4 000+", l: "педагогов", color: "text-primary" },
               { n: "50 000+", l: "уроков создано", color: "text-teal" },

@@ -7,6 +7,9 @@ import AuthModal from "@/components/AuthModal";
 import PaymentModal from "@/components/PaymentModal";
 import { useUser } from "@/context/UserContext";
 
+const FREE_LESSONS = 3;
+const FREE_GAMES = 3;
+
 function useSectionFade() {
   useEffect(() => {
     const els = document.querySelectorAll(".section-fade");
@@ -29,15 +32,29 @@ export default function Index() {
   const [authOpen, setAuthOpen] = useState(false);
   const [paymentOpen, setPaymentOpen] = useState(false);
 
+  // Локальные счётчики для гостей (localStorage)
+  const [guestLessons, setGuestLessons] = useState(() => Number(localStorage.getItem("guest_lessons") || 0));
+  const [guestGames, setGuestGames] = useState(() => Number(localStorage.getItem("guest_games") || 0));
+
   const handleStart = () => {
-    if (!token) { setAuthOpen(true); return; }
-    if (status && !status.can_use.lessons) { setPaymentOpen(true); return; }
+    if (token) {
+      if (status && !status.can_use.lessons) { setPaymentOpen(true); return; }
+      setWizardOpen(true);
+      return;
+    }
+    // Гость
+    if (guestLessons >= FREE_LESSONS) { setPaymentOpen(true); return; }
     setWizardOpen(true);
   };
 
   const handleGame = () => {
-    if (!token) { setAuthOpen(true); return; }
-    if (status && !status.can_use.games) { setPaymentOpen(true); return; }
+    if (token) {
+      if (status && !status.can_use.games) { setPaymentOpen(true); return; }
+      setGameOpen(true);
+      return;
+    }
+    // Гость
+    if (guestGames >= FREE_GAMES) { setPaymentOpen(true); return; }
     setGameOpen(true);
   };
 
@@ -47,15 +64,42 @@ export default function Index() {
     setAnalysisOpen(true);
   };
 
+  // Когда гость закрывает LessonWizard — увеличиваем счётчик
+  const handleLessonClose = () => {
+    if (!token) {
+      const next = guestLessons + 1;
+      setGuestLessons(next);
+      localStorage.setItem("guest_lessons", String(next));
+    }
+    setWizardOpen(false);
+  };
+
+  const handleGameClose = () => {
+    if (!token) {
+      const next = guestGames + 1;
+      setGuestGames(next);
+      localStorage.setItem("guest_games", String(next));
+    }
+    setGameOpen(false);
+  };
+
+  // Счётчики для отображения в Hero
+  const lessonsLeft = token
+    ? status ? Math.max(0, status.limits.lessons - status.usage.lessons) : null
+    : Math.max(0, FREE_LESSONS - guestLessons);
+  const gamesLeft = token
+    ? status ? Math.max(0, status.limits.games - status.usage.games) : null
+    : Math.max(0, FREE_GAMES - guestGames);
+
   return (
     <div className="min-h-screen">
-      {wizardOpen && <LessonWizard onClose={() => setWizardOpen(false)} />}
-      {gameOpen && <GameWizard onClose={() => setGameOpen(false)} />}
+      {wizardOpen && <LessonWizard onClose={handleLessonClose} />}
+      {gameOpen && <GameWizard onClose={handleGameClose} />}
       {analysisOpen && <SelfAnalysisWizard onClose={() => setAnalysisOpen(false)} />}
       {authOpen && <AuthModal onClose={() => setAuthOpen(false)} />}
       {paymentOpen && <PaymentModal onClose={() => setPaymentOpen(false)} />}
 
-      {/* Плашка статуса */}
+      {/* Плашка авторизованного пользователя */}
       {token && status && (
         <div className="fixed bottom-4 right-4 z-50 bg-white rounded-2xl shadow-xl border border-border px-4 py-3 flex items-center gap-3 animate-fade-in">
           <div>
@@ -63,7 +107,7 @@ export default function Index() {
             <div className="font-body text-xs text-muted-foreground">
               {status.plan === "free"
                 ? `Уроки: ${status.usage.lessons}/3 · Игры: ${status.usage.games}/3`
-                : `Подписка активна`}
+                : "Подписка активна"}
             </div>
           </div>
           {status.plan === "free" && (
@@ -84,6 +128,9 @@ export default function Index() {
         onAnalysis={handleAnalysis}
         onAuth={() => setAuthOpen(true)}
         onPayment={() => setPaymentOpen(true)}
+        lessonsLeft={lessonsLeft}
+        gamesLeft={gamesLeft}
+        isPaid={token ? status?.plan !== "free" : false}
       />
     </div>
   );
