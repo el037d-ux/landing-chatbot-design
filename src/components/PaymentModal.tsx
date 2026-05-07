@@ -1,6 +1,6 @@
 import Icon from "@/components/ui/icon";
 
-const TINKOFF_LINK = "https://www.tinkoff.ru/rm/r_JaONvQrMFq.NuRuCRKZqx/rNioS96863";
+const SBP_BASE = "https://t.tb.ru/c2c-qr-choose-bank?requisiteNumber=+79083287309&bankCode=100000000004";
 
 const PLANS = [
   {
@@ -77,15 +77,27 @@ export default function PaymentModal({ onClose }: { onClose: () => void }) {
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-border">
+              <div className="pt-3 border-t border-border space-y-3">
+                {/* QR-код СБП */}
+                <div className="flex flex-col items-center gap-2">
+                  <div className="font-body text-xs text-muted-foreground">Наведите камеру — оплата с любого банка</div>
+                  <div className="p-2 rounded-2xl border border-border bg-white shadow-sm">
+                    <img
+                      src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`${SBP_BASE}&amount=${plan.price * 100}`)}&bgcolor=ffffff&color=000000&qzone=2`}
+                      alt={`QR ${plan.label}`}
+                      className="w-[180px] h-[180px]"
+                    />
+                  </div>
+                </div>
+                {/* Кнопка */}
                 <a
-                  href={`${TINKOFF_LINK}?amount=${plan.price}`}
+                  href={`${SBP_BASE}&amount=${plan.price * 100}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#FFDD2D] text-[#333] font-body font-bold text-sm hover:bg-[#f5d400] transition-all active:scale-95 shadow-sm"
                 >
                   <Icon name="CreditCard" size={16} />
-                  Оплатить {plan.price}₽ через Т-Банк
+                  Оплатить {plan.price}₽ через СБП
                 </a>
               </div>
             </div>
