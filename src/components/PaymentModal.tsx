@@ -1,7 +1,6 @@
 import Icon from "@/components/ui/icon";
 
-const SBP_PHONE = "79083287309";
-const SBP_QR_URL = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`https://qr.nspk.ru/AS100003AWW1BWBH5TBEFXZSNRIRZ7OD?type=01&bank=100000000007&sum=&cur=RUB&crc=F9E8`)}`;
+const TINKOFF_LINK = "https://www.tinkoff.ru/rm/r_JaONvQrMFq.NuRuCRKZqx/rNioS96863";
 
 const PLANS = [
   {
@@ -21,17 +20,6 @@ const PLANS = [
 ];
 
 export default function PaymentModal({ onClose }: { onClose: () => void }) {
-  const sbpLink = `https://qr.nspk.ru/AS100003AWW1BWBH5TBEFXZSNRIRZ7OD?type=01&bank=100000000007&sum=26000&cur=RUB`;
-  const qr7 = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`https://qr.nspk.ru/AS100003AWW1BWBH5TBEFXZSNRIRZ7OD?type=01&bank=100000000007&sum=6900&cur=RUB&crc=F9E8`)}&bgcolor=ffffff&color=3730a3&qzone=1`;
-  const qr30 = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`https://qr.nspk.ru/AS100003AWW1BWBH5TBEFXZSNRIRZ7OD?type=01&bank=100000000007&sum=26000&cur=RUB&crc=F9E8`)}&bgcolor=ffffff&color=3730a3&qzone=1`;
-
-  // QR через СБП — номер телефона
-  const qrPhone7 = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`https://qr.nspk.ru/AS1000034O3LH7LQHS93BH1QNLR7Q31Y?type=01&bank=100000000007&sum=6900&cur=RUB`)}&bgcolor=ffffff&color=3730a3&qzone=2`;
-  const qrPhone30 = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`https://qr.nspk.ru/AS1000034O3LH7LQHS93BH1QNLR7Q31Y?type=01&bank=100000000007&sum=26000&cur=RUB`)}&bgcolor=ffffff&color=3730a3&qzone=2`;
-
-  const sbpPhone7 = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(`tel:+${SBP_PHONE}`)}&bgcolor=ffffff&color=3730a3&qzone=2`;
-  const sbpPhone30 = sbpPhone7;
-
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div
@@ -89,18 +77,16 @@ export default function PaymentModal({ onClose }: { onClose: () => void }) {
                 </div>
               </div>
 
-              {/* QR-код СБП */}
-              <div className="flex flex-col items-center gap-3 pt-3 border-t border-border">
-                <div className="font-body text-xs text-muted-foreground text-center">Оплатите через СБП — наведите камеру на QR-код</div>
-                <div className="p-2 rounded-2xl border border-border bg-white shadow-sm">
-                  <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`https://qr.nspk.ru/AS1000034O3LH7LQHS93BH1QNLR7Q31Y?type=01&bank=100000000007&sum=${plan.price * 100}&cur=RUB`)}&bgcolor=ffffff&color=3730a3&qzone=2`}
-                    alt={`QR ${plan.label}`}
-                    className="w-[180px] h-[180px]"
-                  />
-                </div>
-
-
+              <div className="pt-3 border-t border-border">
+                <a
+                  href={`${TINKOFF_LINK}?amount=${plan.price}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-center gap-2 w-full py-3 rounded-xl bg-[#FFDD2D] text-[#333] font-body font-bold text-sm hover:bg-[#f5d400] transition-all active:scale-95 shadow-sm"
+                >
+                  <Icon name="CreditCard" size={16} />
+                  Оплатить {plan.price}₽ через Т-Банк
+                </a>
               </div>
             </div>
           ))}
