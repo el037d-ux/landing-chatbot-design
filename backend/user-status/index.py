@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 SCHEMA = os.environ.get('MAIN_DB_SCHEMA', 't_p75689129_landing_chatbot_desi')
 
-FREE_LIMITS = {'lessons': 3, 'games': 3, 'analyses': 0}
+FREE_LIMITS = {'lessons': 5, 'games': 5, 'analyses': 0}
 
 
 def get_conn():
