@@ -8,8 +8,19 @@ API_URL = "https://api.aitunnel.ru/v1/chat/completions"
 MODEL = "gpt-4o-mini"
 
 
+CHAT_SYSTEM_PROMPT = """Ты УрокАИ — дружелюбный ИИ-помощник для педагогов. Помогаешь с педагогическими идеями: планами уроков, играми, заданиями, методическими приёмами, мотивацией учеников и оцениванием.
+
+Правила:
+- Отвечай по-русски, тепло и профессионально
+- Давай конкретные, готовые к применению идеи
+- Используй эмодзи для структурирования списков
+- Предлагай 3–5 практичных идей, не перегружай
+- Если запрос расплывчатый — задай 1 уточняющий вопрос
+- Ответ не длиннее 300 слов"""
+
+
 def handler(event: dict, context) -> dict:
-    """Генерирует подробный план-конспект урока по расширенному педагогическому промту."""
+    """Генерирует план-конспект урока или отвечает в режиме чата педагогических идей."""
 
     if event.get('httpMethod') == 'OPTIONS':
         return {
@@ -25,6 +36,35 @@ def handler(event: dict, context) -> dict:
 
     api_key = os.environ.get('AITUNNEL_API_KEY', '')
     body = json.loads(event.get('body') or '{}')
+
+    if body.get('action') == 'chat':
+        messages = body.get('messages', [])
+        if not messages:
+            return {
+                'statusCode': 400,
+                'headers': {'Access-Control-Allow-Origin': '*'},
+                'body': json.dumps({'error': 'messages обязательны'})
+            }
+        payload = {
+            'model': MODEL,
+            'messages': [{'role': 'system', 'content': CHAT_SYSTEM_PROMPT}] + messages,
+            'temperature': 0.8,
+            'max_tokens': 1000,
+        }
+        req = urllib.request.Request(
+            API_URL,
+            data=json.dumps(payload).encode(),
+            headers={'Authorization': f'Bearer {api_key}', 'Content-Type': 'application/json'},
+            method='POST'
+        )
+        with urllib.request.urlopen(req, timeout=25) as resp:
+            result = json.loads(resp.read())
+        reply = result['choices'][0]['message']['content']
+        return {
+            'statusCode': 200,
+            'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+            'body': json.dumps({'reply': reply}, ensure_ascii=False)
+        }
 
     subject = body.get('subject', '')
     grade = body.get('grade', '')
