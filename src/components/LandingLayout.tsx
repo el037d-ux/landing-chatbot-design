@@ -8,15 +8,16 @@ type Props = {
   onAnalysis: () => void;
   onAuth: () => void;
   onPayment: () => void;
+  onProfile: () => void;
   lessonsLeft: number | null;
   gamesLeft: number | null;
   isPaid: boolean;
 };
 
-export default function LandingLayout({ onStart, onGame, onAnalysis, onAuth, onPayment, lessonsLeft, gamesLeft, isPaid }: Props) {
+export default function LandingLayout({ onStart, onGame, onAnalysis, onAuth, onPayment, onProfile, lessonsLeft, gamesLeft, isPaid }: Props) {
   return (
     <>
-      <Navbar onStart={onStart} onAuth={onAuth} onPayment={onPayment} />
+      <Navbar onStart={onStart} onAuth={onAuth} onPayment={onPayment} onProfile={onProfile} />
       <Hero onStart={onStart} onGame={onGame} onAnalysis={onAnalysis} onPayment={onPayment} lessonsLeft={lessonsLeft} gamesLeft={gamesLeft} isPaid={isPaid} />
       <About />
       <ChatDemo />

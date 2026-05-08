@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import Icon from "@/components/ui/icon";
+import { useUser } from "@/context/UserContext";
 
 const HERO_IMAGE = "https://cdn.poehali.dev/projects/3a27d5a9-016a-43ab-946d-4c4fe8129705/bucket/fb741ecb-cd4a-4766-ba6b-9c590c24dfe7.png";
 
-function Navbar({ onStart, onAuth, onPayment }: { onStart: () => void; onAuth: () => void; onPayment: () => void }) {
+function Navbar({ onStart, onAuth, onPayment, onProfile }: { onStart: () => void; onAuth: () => void; onPayment: () => void; onProfile: () => void }) {
+  const { token } = useUser();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -51,9 +53,16 @@ function Navbar({ onStart, onAuth, onPayment }: { onStart: () => void; onAuth: (
             <Icon name="Crown" size={14} className="text-primary" />
             Тарифы
           </button>
-          <button onClick={onAuth} className="text-sm font-body font-medium text-foreground hover:text-primary transition-colors px-3 py-2">
-            Войти
-          </button>
+          {token ? (
+            <button onClick={onProfile} className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border text-sm font-body font-medium text-foreground hover:border-primary/40 hover:bg-primary/5 transition-all">
+              <Icon name="User" size={14} className="text-primary" />
+              Кабинет
+            </button>
+          ) : (
+            <button onClick={onAuth} className="text-sm font-body font-medium text-foreground hover:text-primary transition-colors px-3 py-2">
+              Войти
+            </button>
+          )}
           <button onClick={onStart} className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-body font-semibold hover:bg-primary/90 transition-all shadow-md shadow-primary/25 hover:shadow-lg hover:shadow-primary/30 active:scale-95">
             Начать бесплатно
           </button>
@@ -80,7 +89,13 @@ function Navbar({ onStart, onAuth, onPayment }: { onStart: () => void; onAuth: (
             <button onClick={onPayment} className="w-full py-2.5 text-sm font-body font-semibold border border-primary/30 text-primary rounded-xl flex items-center justify-center gap-2">
               <Icon name="Crown" size={14} />Тарифы
             </button>
-            <button onClick={onAuth} className="w-full py-2.5 text-sm font-body font-medium border border-border rounded-xl">Войти</button>
+            {token ? (
+              <button onClick={onProfile} className="w-full py-2.5 text-sm font-body font-medium border border-border rounded-xl flex items-center justify-center gap-2">
+                <Icon name="User" size={14} />Кабинет
+              </button>
+            ) : (
+              <button onClick={onAuth} className="w-full py-2.5 text-sm font-body font-medium border border-border rounded-xl">Войти</button>
+            )}
             <button onClick={onStart} className="w-full py-2.5 text-sm font-body font-semibold bg-primary text-white rounded-xl">Начать бесплатно</button>
           </div>
         </div>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import LandingLayout from "@/components/LandingLayout";
 import LessonWizard from "@/components/LessonWizard";
 import GameWizard from "@/components/GameWizard";
@@ -25,6 +26,7 @@ function useSectionFade() {
 export default function Index() {
   useSectionFade();
   const { status, token, logout } = useUser();
+  const navigate = useNavigate();
 
   const [wizardOpen, setWizardOpen] = useState(false);
   const [gameOpen, setGameOpen] = useState(false);
@@ -124,6 +126,7 @@ export default function Index() {
         onAnalysis={handleAnalysis}
         onAuth={() => setAuthOpen(true)}
         onPayment={() => setPaymentOpen(true)}
+        onProfile={() => navigate("/profile")}
         lessonsLeft={lessonsLeft}
         gamesLeft={gamesLeft}
         isPaid={token ? status?.plan !== "free" : false}
