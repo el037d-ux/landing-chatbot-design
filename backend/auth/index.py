@@ -261,6 +261,31 @@ def handler(event: dict, context) -> dict:
                 }, ensure_ascii=False)
             }
 
+        elif action == 'send_email':
+            to = body.get('to', '').strip()
+            subject = body.get('subject', '').strip()
+            html = body.get('html', '').strip()
+            text = body.get('text', '').strip()
+            if not to or not subject or not html:
+                return {'statusCode': 400, 'headers': {'Access-Control-Allow-Origin': '*'}, 'body': json.dumps({'ok': False, 'error': 'Поля to, subject и html обязательны'})}
+            smtp_from = os.environ.get('SMTP_FROM', '')
+            smtp_password = os.environ.get('SMTP_PASSWORD', '')
+            msg = MIMEMultipart('alternative')
+            msg['Subject'] = subject
+            msg['From'] = smtp_from
+            msg['To'] = to
+            if text:
+                msg.attach(MIMEText(text, 'plain', 'utf-8'))
+            msg.attach(MIMEText(html, 'html', 'utf-8'))
+            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
+                server.login(smtp_from, smtp_password)
+                server.sendmail(smtp_from, to, msg.as_string())
+            return {
+                'statusCode': 200,
+                'headers': {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json'},
+                'body': json.dumps({'ok': True})
+            }
+
         else:
             return {'statusCode': 400, 'headers': {'Access-Control-Allow-Origin': '*'}, 'body': json.dumps({'ok': False, 'error': 'Неизвестное действие'})}
 
