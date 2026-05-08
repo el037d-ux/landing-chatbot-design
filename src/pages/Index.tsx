@@ -7,8 +7,8 @@ import AuthModal from "@/components/AuthModal";
 import PaymentModal from "@/components/PaymentModal";
 import { useUser } from "@/context/UserContext";
 
-const FREE_LESSONS = 3;
-const FREE_GAMES = 3;
+const FREE_LESSONS = 5;
+const FREE_GAMES = 5;
 
 function useSectionFade() {
   useEffect(() => {
@@ -37,6 +37,12 @@ export default function Index() {
   const [guestGames, setGuestGames] = useState(() => Number(localStorage.getItem("guest_games") || 0));
 
   const handleStart = () => {
+    if (token) {
+      if (status && !status.can_use.lessons) { setPaymentOpen(true); return; }
+      setWizardOpen(true);
+      return;
+    }
+    if (guestLessons >= FREE_LESSONS) { setPaymentOpen(true); return; }
     setWizardOpen(true);
   };
 
@@ -46,7 +52,6 @@ export default function Index() {
       setGameOpen(true);
       return;
     }
-    // Гость
     if (guestGames >= FREE_GAMES) { setPaymentOpen(true); return; }
     setGameOpen(true);
   };
@@ -58,6 +63,11 @@ export default function Index() {
   };
 
   const handleLessonClose = () => {
+    if (!token) {
+      const next = guestLessons + 1;
+      setGuestLessons(next);
+      localStorage.setItem("guest_lessons", String(next));
+    }
     setWizardOpen(false);
   };
 
@@ -70,7 +80,9 @@ export default function Index() {
     setGameOpen(false);
   };
 
-  const lessonsLeft = null;
+  const lessonsLeft = token
+    ? status ? Math.max(0, status.limits.lessons - status.usage.lessons) : null
+    : Math.max(0, FREE_LESSONS - guestLessons);
   const gamesLeft = token
     ? status ? Math.max(0, status.limits.games - status.usage.games) : null
     : Math.max(0, FREE_GAMES - guestGames);
