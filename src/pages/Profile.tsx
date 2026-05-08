@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "@/context/UserContext";
 import Icon from "@/components/ui/icon";
@@ -15,12 +16,21 @@ const PLAN_COLORS: Record<string, string> = {
 };
 
 export default function Profile() {
-  const { status, token, logout } = useUser();
+  const { status, token, loading, logout } = useUser();
   const navigate = useNavigate();
 
-  if (!token || !status) {
-    navigate("/");
-    return null;
+  useEffect(() => {
+    if (!loading && !token) {
+      navigate("/");
+    }
+  }, [loading, token, navigate]);
+
+  if (loading || !status) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-indigo-light/30 to-teal-light/20">
+        <div className="w-10 h-10 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
+      </div>
+    );
   }
 
   const { user, plan, expires_at, usage, limits } = status;
