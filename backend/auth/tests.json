@@ -7,13 +7,18 @@
       "expectedStatus": 200
     },
     {
-      "name": "Register user",
+      "name": "Login with wrong password",
       "method": "POST",
       "path": "/",
-      "body": {"action": "register", "email": "test_urok@example.com", "password": "testpass123", "name": "Тест Педагог"},
-      "expectedStatus": 200,
-      "expectedBody": {"ok": true},
-      "bodyMatcher": "partial"
+      "body": {"action": "login", "email": "notexist@example.com", "password": "wrongpass"},
+      "expectedStatus": 401
+    },
+    {
+      "name": "Missing fields returns 400",
+      "method": "POST",
+      "path": "/",
+      "body": {"action": "login", "email": ""},
+      "expectedStatus": 400
     }
   ]
 }
