@@ -28,7 +28,7 @@ const UserContext = createContext<UserContextType | null>(null);
 export function UserProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem("urok_token"));
   const [status, setStatus] = useState<UserStatus | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(() => !!localStorage.getItem("urok_token"));
 
   const fetchStatus = async (t: string) => {
     try {
@@ -38,10 +38,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
       const data = await res.json();
       if (data.ok) setStatus(data);
     } catch (e) { console.error("fetchStatus error", e); }
+    finally { setLoading(false); }
   };
 
   useEffect(() => {
     if (token) fetchStatus(token);
+    else setLoading(false);
   }, [token]);
 
   const login = async (email: string, password: string) => {
