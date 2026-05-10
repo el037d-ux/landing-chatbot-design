@@ -79,7 +79,7 @@ def get_user_from_token(cur, token):
 
 
 def handler(event: dict, context) -> dict:
-    """Регистрация, вход, смена имени и пароля."""
+    """Регистрация, вход, смена имени, пароля и оплата ЮКасса."""
 
     if event.get('httpMethod') == 'OPTIONS':
         return {'statusCode': 200, 'headers': {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type, X-Authorization'}, 'body': ''}
