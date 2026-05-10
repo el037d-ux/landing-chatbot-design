@@ -20,7 +20,7 @@ export default function LandingLayout({ onStart, onGame, onAnalysis, onAuth, onP
       <Navbar onStart={onStart} onAuth={onAuth} onPayment={onPayment} onProfile={onProfile} />
       <Hero onStart={onStart} onGame={onGame} onAnalysis={onAnalysis} onPayment={onPayment} lessonsLeft={lessonsLeft} gamesLeft={gamesLeft} isPaid={isPaid} />
       <About />
-      <ChatDemo />
+      <ChatDemo onPayment={onPayment} />
       <FAQ />
       <CTA onStart={onStart} />
       <Contacts />

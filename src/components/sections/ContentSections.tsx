@@ -115,7 +115,7 @@ type Message = { role: "user" | "bot"; text: string };
 
 const FREE_CHAT_LIMIT = 8;
 
-function ChatDemo() {
+function ChatDemo({ onPayment }: { onPayment?: () => void }) {
   const { token, status, incrementUsage } = useUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -281,9 +281,16 @@ function ChatDemo() {
             {/* Input */}
             <div className="flex-shrink-0 border-t border-border p-4">
               {isLimitReached ? (
-                <div className="text-center py-2">
-                  <p className="font-body text-sm font-semibold text-foreground mb-1">Лимит сообщений исчерпан</p>
-                  <p className="font-body text-xs text-muted-foreground">Оформите подписку, чтобы общаться с ИИ без ограничений</p>
+                <div className="text-center py-3 space-y-2">
+                  <p className="font-body text-sm font-semibold text-foreground">Лимит сообщений исчерпан</p>
+                  <p className="font-body text-xs text-muted-foreground">Оформите подписку, чтобы общаться без ограничений</p>
+                  <button
+                    onClick={onPayment}
+                    className="mt-1 inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-primary text-white font-body font-bold text-sm hover:bg-primary/90 transition-all active:scale-95 shadow-md shadow-primary/25"
+                  >
+                    <Icon name="Crown" size={15} />
+                    Оформить подписку
+                  </button>
                 </div>
               ) : (
                 <>
