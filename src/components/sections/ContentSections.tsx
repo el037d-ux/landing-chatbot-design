@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import Icon from "@/components/ui/icon";
+import { useUser } from "@/context/UserContext";
 
 const CHAT_URL = "https://functions.poehali.dev/1186dab1-1c68-4be5-95d4-74d1e710571e";
 
@@ -112,17 +113,22 @@ function About() {
 
 type Message = { role: "user" | "bot"; text: string };
 
-const MAX_MESSAGES = 8;
+const FREE_CHAT_LIMIT = 8;
 
 function ChatDemo() {
+  const { token, status, incrementUsage } = useUser();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const chatRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
-  const userMessageCount = messages.filter((m) => m.role === "user").length;
-  const isLimitReached = userMessageCount >= MAX_MESSAGES;
+  // Гостевой счётчик (localStorage)
+  const [guestChat, setGuestChat] = useState(() => Number(localStorage.getItem("guest_chat") || 0));
+
+  const chatUsed = token ? (status?.usage.chat ?? 0) : guestChat;
+  const chatLimit = token ? (status?.limits.chat ?? FREE_CHAT_LIMIT) : FREE_CHAT_LIMIT;
+  const isLimitReached = chatUsed >= chatLimit;
 
   useEffect(() => {
     if (chatRef.current) {
@@ -138,6 +144,15 @@ function ChatDemo() {
     setMessages(newMessages);
     setInput("");
     setLoading(true);
+
+    // Увеличиваем счётчик
+    if (token) {
+      await incrementUsage("chat");
+    } else {
+      const next = guestChat + 1;
+      setGuestChat(next);
+      localStorage.setItem("guest_chat", String(next));
+    }
 
     try {
       const res = await fetch(CHAT_URL, {
@@ -267,8 +282,8 @@ function ChatDemo() {
             <div className="flex-shrink-0 border-t border-border p-4">
               {isLimitReached ? (
                 <div className="text-center py-2">
-                  <p className="font-body text-sm font-semibold text-foreground mb-1">Лимит демо исчерпан</p>
-                  <p className="font-body text-xs text-muted-foreground">Зарегистрируйтесь, чтобы общаться с ИИ без ограничений</p>
+                  <p className="font-body text-sm font-semibold text-foreground mb-1">Лимит сообщений исчерпан</p>
+                  <p className="font-body text-xs text-muted-foreground">Оформите подписку, чтобы общаться с ИИ без ограничений</p>
                 </div>
               ) : (
                 <>
@@ -292,7 +307,7 @@ function ChatDemo() {
                     </button>
                   </div>
                   <p className="font-body text-xs text-muted-foreground mt-2 text-center">
-                    Enter — отправить · Shift+Enter — новая строка · {MAX_MESSAGES - userMessageCount} из {MAX_MESSAGES} сообщений
+                    Enter — отправить · Shift+Enter — новая строка · осталось {chatLimit - chatUsed} из {chatLimit} сообщений
                   </p>
                 </>
               )}

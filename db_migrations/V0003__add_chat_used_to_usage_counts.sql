@@ -1,0 +1,1 @@
+ALTER TABLE t_p75689129_landing_chatbot_desi.usage_counts ADD COLUMN chat_used integer NOT NULL DEFAULT 0;

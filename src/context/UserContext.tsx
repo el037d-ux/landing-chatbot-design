@@ -7,9 +7,9 @@ export type UserStatus = {
   user: { id: number; email: string; name: string } | null;
   plan: "free" | "7days" | "30days";
   expires_at: string | null;
-  usage: { lessons: number; games: number; analyses: number };
-  limits: { lessons: number; games: number; analyses: number };
-  can_use: { lessons: boolean; games: boolean; analyses: boolean };
+  usage: { lessons: number; games: number; analyses: number; chat: number };
+  limits: { lessons: number; games: number; analyses: number; chat: number };
+  can_use: { lessons: boolean; games: boolean; analyses: boolean; chat: boolean };
 };
 
 type UserContextType = {
@@ -19,7 +19,7 @@ type UserContextType = {
   login: (email: string, password: string) => Promise<{ ok: boolean; error?: string }>;
   register: (email: string, password: string, name: string) => Promise<{ ok: boolean; error?: string }>;
   logout: () => void;
-  incrementUsage: (resource: "lessons" | "games" | "analyses") => Promise<void>;
+  incrementUsage: (resource: "lessons" | "games" | "analyses" | "chat") => Promise<void>;
   refreshStatus: () => Promise<void>;
 };
 
@@ -98,7 +98,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setStatus(null);
   };
 
-  const incrementUsage = async (resource: "lessons" | "games" | "analyses") => {
+  const incrementUsage = async (resource: "lessons" | "games" | "analyses" | "chat") => {
     if (!token) return;
     try {
       const res = await fetch(STATUS_URL, {

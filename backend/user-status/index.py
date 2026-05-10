@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 
 SCHEMA = os.environ.get('MAIN_DB_SCHEMA', 't_p75689129_landing_chatbot_desi')
 
-FREE_LIMITS = {'lessons': 5, 'games': 5, 'analyses': 0}
+FREE_LIMITS = {'lessons': 5, 'games': 5, 'analyses': 0, 'chat': 8}
 
 
 def get_conn():
@@ -63,12 +63,12 @@ def handler(event: dict, context) -> dict:
                 plan = 'free'
 
         # Счётчики использования
-        cur.execute(f"SELECT lessons_used, games_used, analyses_used FROM {SCHEMA}.usage_counts WHERE user_id=%s", (user_id,))
+        cur.execute(f"SELECT lessons_used, games_used, analyses_used, chat_used FROM {SCHEMA}.usage_counts WHERE user_id=%s", (user_id,))
         usage_row = cur.fetchone()
-        usage = {'lessons': usage_row[0], 'games': usage_row[1], 'analyses': usage_row[2]} if usage_row else {'lessons': 0, 'games': 0, 'analyses': 0}
+        usage = {'lessons': usage_row[0], 'games': usage_row[1], 'analyses': usage_row[2], 'chat': usage_row[3]} if usage_row else {'lessons': 0, 'games': 0, 'analyses': 0, 'chat': 0}
 
         # Увеличить счётчик
-        if action == 'increment' and resource in ('lessons', 'games', 'analyses'):
+        if action == 'increment' and resource in ('lessons', 'games', 'analyses', 'chat'):
             col = f"{resource}_used"
             cur.execute(f"UPDATE {SCHEMA}.usage_counts SET {col}={col}+1, updated_at=NOW() WHERE user_id=%s", (user_id,))
             conn.commit()
@@ -80,6 +80,7 @@ def handler(event: dict, context) -> dict:
             'lessons': 999 if is_paid else FREE_LIMITS['lessons'],
             'games': 999 if is_paid else FREE_LIMITS['games'],
             'analyses': 999 if is_paid else FREE_LIMITS['analyses'],
+            'chat': 999 if is_paid else FREE_LIMITS['chat'],
         }
         can_use = {k: usage[k] < limits[k] for k in limits}
 
