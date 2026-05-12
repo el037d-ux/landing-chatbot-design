@@ -90,7 +90,7 @@ function Footer() {
           </div>
         </div>
         <div className="border-t border-white/10 pt-6 flex flex-col md:flex-row items-center justify-between gap-3">
-          <p className="font-body text-xs text-white/40">© 2025 УрокАИ. Все права защищены.</p>
+          <p className="font-body text-xs text-white/40">© {new Date().getFullYear()} УрокАИ. Все права защищены.</p>
           <div className="flex gap-4">
             <a href="/privacy" className="font-body text-xs text-white/40 hover:text-white/70 transition-colors">Политика конфиденциальности</a>
             <a href="/terms" className="font-body text-xs text-white/40 hover:text-white/70 transition-colors">Пользовательское соглашение</a>
