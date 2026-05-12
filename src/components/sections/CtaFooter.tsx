@@ -2,25 +2,25 @@ import Icon from "@/components/ui/icon";
 
 function CTA({ onStart }: { onStart: () => void }) {
   return (
-    <section className="py-24 relative overflow-hidden">
+    <section className="py-16 sm:py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-[hsl(243,75%,45%)] to-[hsl(174,62%,30%)]" />
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-amber/15 blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-white/8 blur-3xl" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-teal/10 blur-3xl" />
+      <div className="absolute top-0 right-0 w-48 sm:w-80 md:w-[500px] h-48 sm:h-80 md:h-[500px] rounded-full bg-amber/15 blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-40 sm:w-64 md:w-[400px] h-40 sm:h-64 md:h-[400px] rounded-full bg-white/8 blur-3xl" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 sm:w-80 md:w-[600px] h-48 sm:h-80 md:h-[600px] rounded-full bg-teal/10 blur-3xl" />
 
-      <div className="relative container max-w-3xl mx-auto px-6 text-center section-fade">
+      <div className="relative container max-w-3xl mx-auto px-4 sm:px-6 text-center section-fade">
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 border border-white/25 mb-6">
           <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse-soft" />
           <span className="text-xs font-body font-semibold text-white">Начните сегодня</span>
         </div>
-        <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 mb-5 text-white leading-tight">
+        <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-3 mb-5 text-white leading-tight">
           Сделайте каждый урок{" "}
           <span className="text-amber">незабываемым</span>
         </h2>
-        <p className="font-body text-lg text-white/70 mb-8 max-w-xl mx-auto">
+        <p className="font-body text-base sm:text-lg text-white/70 mb-8 max-w-xl mx-auto">
           Присоединяйтесь к тысячам педагогов, которые готовятся к урокам быстрее и увереннее.
         </p>
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3">
           <button
             onClick={onStart}
             className="px-8 py-3.5 rounded-xl bg-white text-foreground font-body font-bold hover:bg-white/95 transition-all hover:shadow-xl hover:shadow-white/20 active:scale-95"
@@ -59,8 +59,8 @@ function Contacts() {
 function Footer() {
   return (
     <footer className="bg-foreground border-t border-border py-12">
-      <div className="container max-w-6xl mx-auto px-6">
-        <div className="grid md:grid-cols-4 gap-8 mb-10">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-10">
           <div className="md:col-span-2">
             <div className="flex items-center gap-2.5 mb-4">
               <span className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/30">

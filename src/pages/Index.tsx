@@ -99,10 +99,10 @@ export default function Index() {
 
       {/* Плашка авторизованного пользователя */}
       {token && status && (
-        <div className="fixed bottom-4 right-4 z-50 bg-white rounded-2xl shadow-xl border border-border px-4 py-3 flex items-center gap-3 animate-fade-in">
-          <div>
-            <div className="font-body text-xs font-semibold text-foreground">{status.user?.name || status.user?.email}</div>
-            <div className="font-body text-xs text-muted-foreground">
+        <div className="fixed bottom-3 right-3 sm:bottom-4 sm:right-4 z-50 bg-white rounded-2xl shadow-xl border border-border px-3 sm:px-4 py-2.5 sm:py-3 flex items-center gap-2 sm:gap-3 animate-fade-in max-w-[calc(100vw-1.5rem)]">
+          <div className="min-w-0">
+            <div className="font-body text-xs font-semibold text-foreground truncate max-w-[140px] sm:max-w-none">{status.user?.name || status.user?.email}</div>
+            <div className="font-body text-xs text-muted-foreground hidden sm:block">
               {status.plan === "free"
                 ? `Уроки: ${status.usage.lessons}/3 · Игры: ${status.usage.games}/3`
                 : "Подписка активна"}
@@ -110,11 +110,11 @@ export default function Index() {
           </div>
           {status.plan === "free" && (
             <button onClick={() => setPaymentOpen(true)}
-              className="px-3 py-1.5 rounded-lg bg-primary text-white font-body text-xs font-semibold hover:bg-primary/90 transition-colors">
+              className="px-3 py-1.5 rounded-lg bg-primary text-white font-body text-xs font-semibold hover:bg-primary/90 transition-colors flex-shrink-0">
               Купить
             </button>
           )}
-          <button onClick={logout} className="w-6 h-6 rounded-lg hover:bg-slate flex items-center justify-center transition-colors">
+          <button onClick={logout} className="w-6 h-6 rounded-lg hover:bg-slate flex items-center justify-center transition-colors flex-shrink-0">
             <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M9 3L3 9M3 3l6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>
           </button>
         </div>

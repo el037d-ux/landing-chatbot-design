@@ -263,16 +263,16 @@ export default function Quests() {
         </div>
       </div>
 
-      <div className="flex-1 flex items-center justify-center pt-24 pb-12 px-4">
+      <div className="flex-1 flex items-start justify-center pt-20 sm:pt-24 pb-8 sm:pb-12 px-4">
         <div className="w-full max-w-xl">
 
           {/* ЛОББИ */}
           {screen === "lobby" && (
             <div className="animate-fade-in">
-              <div className="text-center mb-8">
-                <div className="text-5xl mb-3">🗺️</div>
-                <h1 className="font-display text-2xl font-bold text-foreground mb-2">Квесты</h1>
-                <p className="font-body text-muted-foreground">Выберите квест и проверьте свои знания</p>
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="text-4xl sm:text-5xl mb-3">🗺️</div>
+                <h1 className="font-display text-xl sm:text-2xl font-bold text-foreground mb-2">Квесты</h1>
+                <p className="font-body text-sm sm:text-base text-muted-foreground">Выберите квест и проверьте свои знания</p>
               </div>
               <div className="space-y-4">
                 {QUESTS.map((q) => (
@@ -301,7 +301,7 @@ export default function Quests() {
 
           {/* ИГРА */}
           {screen === "play" && (
-            <div className="bg-white rounded-3xl shadow-xl p-8 animate-fade-in">
+            <div className="bg-white rounded-3xl shadow-xl p-5 sm:p-8 animate-fade-in">
               <div className="h-2 bg-slate-100 rounded-full mb-6 overflow-hidden">
                 <div
                   className={`h-full bg-gradient-to-r ${quest.color} rounded-full transition-all duration-500`}
@@ -348,7 +348,7 @@ export default function Quests() {
 
           {/* РЕЗУЛЬТАТ */}
           {screen === "result" && (
-            <div className="bg-white rounded-3xl shadow-xl p-8 text-center animate-fade-in">
+            <div className="bg-white rounded-3xl shadow-xl p-5 sm:p-8 text-center animate-fade-in">
               <div className="text-5xl mb-3">{result.icon}</div>
               <h2 className="font-display text-xl font-bold text-foreground mb-2">{result.level}</h2>
               <p className="font-body text-muted-foreground mb-5 leading-relaxed">{result.desc}</p>

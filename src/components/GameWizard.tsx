@@ -63,7 +63,7 @@ export default function GameWizard({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg animate-fade-in-up overflow-hidden" onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div className="px-8 pt-8 pb-6">
+        <div className="px-4 sm:px-8 pt-6 sm:pt-8 pb-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2.5">
               <span className="w-8 h-8 rounded-xl bg-amber flex items-center justify-center shadow-md shadow-amber/30">
@@ -87,7 +87,7 @@ export default function GameWizard({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="px-8 pb-8">
+        <div className="px-4 sm:px-8 pb-6 sm:pb-8">
           <div className={`transition-all duration-200 ease-out ${slideClass}`}>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 rounded-xl bg-amber-light flex items-center justify-center">

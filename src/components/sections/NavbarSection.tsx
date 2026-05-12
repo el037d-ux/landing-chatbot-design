@@ -91,29 +91,29 @@ function Hero({ onStart, onGame, onAnalysis, onPayment, lessonsLeft, gamesLeft, 
   return (
     <section className="relative min-h-screen flex items-center pt-16 overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-indigo-light/40 to-teal-light/30 -z-10" />
-      <div className="absolute top-1/4 right-0 w-[500px] h-[500px] rounded-full bg-primary/8 blur-3xl -z-10" />
-      <div className="absolute bottom-0 left-1/4 w-[400px] h-[400px] rounded-full bg-amber-light blur-3xl -z-10" />
-      <div className="absolute top-1/2 left-0 w-[300px] h-[300px] rounded-full bg-teal-light/50 blur-3xl -z-10" />
+      <div className="absolute top-1/4 right-0 w-48 sm:w-80 md:w-[500px] h-48 sm:h-80 md:h-[500px] rounded-full bg-primary/8 blur-3xl -z-10" />
+      <div className="absolute bottom-0 left-1/4 w-40 sm:w-64 md:w-[400px] h-40 sm:h-64 md:h-[400px] rounded-full bg-amber-light blur-3xl -z-10" />
+      <div className="absolute top-1/2 left-0 w-32 sm:w-52 md:w-[300px] h-32 sm:h-52 md:h-[300px] rounded-full bg-teal-light/50 blur-3xl -z-10" />
 
-      <div className="container max-w-6xl mx-auto px-6 py-20 grid lg:grid-cols-2 gap-16 items-center">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full badge-amber mb-8 animate-fade-in-up">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full badge-amber mb-6 sm:mb-8 animate-fade-in-up">
             <span className="w-1.5 h-1.5 rounded-full bg-amber animate-pulse-soft" />
             <span className="text-xs font-body font-semibold">ИИ для педагогов нового поколения</span>
           </div>
 
-          <h1 className="font-display text-5xl lg:text-6xl font-bold leading-[1.1] text-foreground mb-6 animate-fade-in-up delay-100">
+          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] text-foreground mb-5 sm:mb-6 animate-fade-in-up delay-100">
             Готовьте уроки{" "}
             <span className="gradient-text">в 10 раз быстрее</span>{" "}
             с помощью ИИ
           </h1>
 
-          <p className="font-body text-lg text-muted-foreground leading-relaxed mb-8 animate-fade-in-up delay-200">
+          <p className="font-body text-base sm:text-lg text-muted-foreground leading-relaxed mb-6 sm:mb-8 animate-fade-in-up delay-200">
             Опишите тему, возраст учеников и предмет — УрокАИ предложит идеи активностей, методы оценивания и готовый план урока за секунды.
           </p>
 
           {/* Две главные кнопки */}
-          <div className="grid sm:grid-cols-2 gap-3 mb-6 animate-fade-in-up delay-300">
+          <div className="grid grid-cols-2 gap-3 mb-6 animate-fade-in-up delay-300">
             {/* Генератор урока */}
             <button
               onClick={onStart}
@@ -150,7 +150,7 @@ function Hero({ onStart, onGame, onAnalysis, onPayment, lessonsLeft, gamesLeft, 
 
           </div>
 
-          <div className="flex flex-wrap gap-6 animate-fade-in-up delay-500">
+          <div className="flex flex-wrap gap-4 sm:gap-6 animate-fade-in-up delay-500">
             {[
               { n: "4 000+", l: "педагогов", color: "text-primary" },
               { n: "50 000+", l: "уроков создано", color: "text-teal" },

@@ -26,7 +26,7 @@ export default function AuthModal({ onClose }: { onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md animate-fade-in-up overflow-hidden" onClick={e => e.stopPropagation()}>
-        <div className="px-8 pt-8 pb-6 border-b border-border">
+        <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-5 sm:pb-6 border-b border-border">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
               <span className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/30">
@@ -47,7 +47,7 @@ export default function AuthModal({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="px-8 py-7 space-y-4">
+        <div className="px-5 sm:px-8 py-5 sm:py-7 space-y-4">
           {mode === "register" && (
             <div>
               <label className="font-body text-sm font-medium text-foreground mb-1.5 block">Имя</label>

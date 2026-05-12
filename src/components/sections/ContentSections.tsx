@@ -76,20 +76,20 @@ const FEATURES = [
 
 function About() {
   return (
-    <section id="about" className="py-24 bg-white">
-      <div className="container max-w-6xl mx-auto px-6">
-        <div className="section-fade text-center mb-16">
+    <section id="about" className="py-16 sm:py-24 bg-white">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="section-fade text-center mb-10 sm:mb-16">
           <span className="inline-block px-3 py-1 rounded-full badge-indigo text-xs font-body font-semibold uppercase tracking-wider mb-4">О сервисе</span>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 mb-5 text-foreground">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-3 mb-5 text-foreground">
             Всё необходимое для{" "}
             <span className="gradient-text">современного урока</span>
           </h2>
-          <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="font-body text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             УрокАИ — это интеллектуальный ассистент, который понимает специфику педагогической работы и помогает создавать вовлекающие уроки.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-5">
           {FEATURES.map((f, i) => (
             <div
               key={f.title}
@@ -185,20 +185,20 @@ function ChatDemo({ onPayment }: { onPayment?: () => void }) {
   const isEmpty = messages.length === 0;
 
   return (
-    <section id="demo" className="py-24 bg-background">
-      <div className="container max-w-6xl mx-auto px-6">
-        <div className="section-fade text-center mb-16">
+    <section id="demo" className="py-16 sm:py-24 bg-background">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="section-fade text-center mb-10 sm:mb-16">
           <span className="inline-block px-3 py-1 rounded-full badge-amber text-xs font-body font-semibold uppercase tracking-wider mb-4">Попробуйте прямо сейчас</span>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 mb-5 text-foreground">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-3 mb-5 text-foreground">
             Живой диалог с ИИ-помощником
           </h2>
-          <p className="font-body text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="font-body text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             Спросите что угодно о педагогике — получите конкретные идеи прямо здесь.
           </p>
         </div>
 
         <div className="section-fade max-w-2xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-xl shadow-primary/8 border border-border overflow-hidden flex flex-col" style={{ height: 520 }}>
+          <div className="bg-white rounded-2xl shadow-xl shadow-primary/8 border border-border overflow-hidden flex flex-col" style={{ height: "min(520px, 70vh)" }}>
             {/* Header */}
             <div className="px-6 py-4 border-b border-border flex items-center gap-3 bg-slate/50 flex-shrink-0">
               <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-sm">
@@ -330,14 +330,14 @@ function FAQ() {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="py-24 bg-white">
-      <div className="container max-w-3xl mx-auto px-6">
-        <div className="section-fade text-center mb-16">
+    <section id="faq" className="py-16 sm:py-24 bg-white">
+      <div className="container max-w-3xl mx-auto px-4 sm:px-6">
+        <div className="section-fade text-center mb-10 sm:mb-16">
           <span className="inline-block px-3 py-1 rounded-full badge-indigo text-xs font-body font-semibold uppercase tracking-wider mb-4">Вопросы и ответы</span>
-          <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 mb-5 text-foreground">
+          <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-3 mb-5 text-foreground">
             Частые вопросы
           </h2>
-          <p className="font-body text-lg text-muted-foreground">
+          <p className="font-body text-base sm:text-lg text-muted-foreground">
             Если не нашли ответ — напишите нам в поддержку.
           </p>
         </div>
@@ -374,12 +374,12 @@ function FAQ() {
 
 function Articles() {
   return (
-    <section id="articles" className="py-24 bg-background">
-      <div className="container max-w-6xl mx-auto px-6">
-        <div className="section-fade flex items-end justify-between mb-12">
+    <section id="articles" className="py-16 sm:py-24 bg-background">
+      <div className="container max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="section-fade flex items-end justify-between mb-8 sm:mb-12">
           <div>
             <span className="inline-block px-3 py-1 rounded-full badge-amber text-xs font-body font-semibold uppercase tracking-wider mb-4">Блог</span>
-            <h2 className="font-display text-4xl lg:text-5xl font-bold mt-3 text-foreground">
+            <h2 className="font-display text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold mt-3 text-foreground">
               Статьи и советы
             </h2>
           </div>
@@ -389,7 +389,7 @@ function Articles() {
           </a>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-3 gap-4 sm:gap-6">
           {ARTICLES.map((a, i) => (
             <div
               key={i}

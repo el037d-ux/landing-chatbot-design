@@ -9,7 +9,7 @@ export default function GameResultModal({ game, onClose }: { game: Game; onClose
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-2xl max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up" onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div className="px-8 pt-7 pb-5 border-b border-border flex-shrink-0">
+        <div className="px-4 sm:px-8 pt-5 sm:pt-7 pb-5 border-b border-border flex-shrink-0">
           <div className="flex items-start justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -43,7 +43,7 @@ export default function GameResultModal({ game, onClose }: { game: Game; onClose
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto flex-1 px-8 py-6 space-y-5">
+        <div className="overflow-y-auto flex-1 px-4 sm:px-8 py-5 sm:py-6 space-y-5">
 
           {tab === "overview" && (
             <>
@@ -181,7 +181,7 @@ export default function GameResultModal({ game, onClose }: { game: Game; onClose
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-4 border-t border-border flex-shrink-0">
+        <div className="px-4 sm:px-8 py-4 border-t border-border flex-shrink-0">
           <button onClick={() => downloadGame(game)}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-amber text-foreground font-body text-sm font-bold hover:bg-amber/90 transition-all active:scale-95 shadow-md shadow-amber/25">
             <Icon name="Download" size={16} />

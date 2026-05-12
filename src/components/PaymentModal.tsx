@@ -95,7 +95,7 @@ export default function PaymentModal({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto animate-fade-in-up" onClick={e => e.stopPropagation()}>
 
-        <div className="px-8 pt-7 pb-5 border-b border-border flex items-center justify-between">
+        <div className="px-5 sm:px-8 pt-5 sm:pt-7 pb-4 sm:pb-5 border-b border-border flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2 mb-1">
               <span className="w-5 h-5 rounded-md bg-primary flex items-center justify-center">
@@ -115,7 +115,7 @@ export default function PaymentModal({ onClose }: { onClose: () => void }) {
           </button>
         </div>
 
-        <div className="px-8 py-6 space-y-5">
+        <div className="px-5 sm:px-8 py-5 sm:py-6 space-y-5">
 
           {step === "plan" && (
             <>

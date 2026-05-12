@@ -112,7 +112,7 @@ function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => 
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-3xl max-h-[92vh] overflow-hidden flex flex-col animate-fade-in-up" onClick={e => e.stopPropagation()}>
 
         {/* Header */}
-        <div className="px-8 pt-7 pb-4 border-b border-border flex-shrink-0">
+        <div className="px-4 sm:px-8 pt-5 sm:pt-7 pb-4 border-b border-border flex-shrink-0">
           <div className="flex items-start justify-between gap-4 mb-3">
             <div>
               <div className="flex items-center gap-2 mb-1">
@@ -151,7 +151,7 @@ function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => 
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto flex-1 px-8 py-5 space-y-4">
+        <div className="overflow-y-auto flex-1 px-4 sm:px-8 py-5 space-y-4">
 
           {tab === "plan" && (
             <>
@@ -161,7 +161,7 @@ function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => 
                 <p className="font-body text-sm text-foreground">{lesson.goal}</p>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {[
                   { label: "Предметные", text: lesson.planned_results?.subject, color: "bg-indigo-light border-indigo-mid text-primary" },
                   { label: "Метапредметные", text: lesson.planned_results?.meta, color: "bg-teal-light border-teal/20 text-teal" },
@@ -353,7 +353,7 @@ function LessonResult({ lesson, onClose }: { lesson: LessonPlan; onClose: () => 
         </div>
 
         {/* Footer */}
-        <div className="px-8 py-4 border-t border-border flex-shrink-0">
+        <div className="px-4 sm:px-8 py-4 border-t border-border flex-shrink-0">
           <button onClick={() => downloadLesson(lesson)}
             className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-primary text-white font-body text-sm font-bold hover:bg-primary/90 transition-all active:scale-95 shadow-md shadow-primary/25">
             <Icon name="Download" size={16} />
@@ -426,7 +426,7 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg animate-fade-in-up overflow-hidden" onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div className="px-8 pt-8 pb-5">
+        <div className="px-4 sm:px-8 pt-6 sm:pt-8 pb-5">
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2.5">
               <span className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/30">
@@ -448,7 +448,7 @@ export default function LessonWizard({ onClose }: { onClose: () => void }) {
           </div>
         </div>
 
-        <div className="px-8 pb-8">
+        <div className="px-4 sm:px-8 pb-6 sm:pb-8">
           <div className={`transition-all duration-200 ease-out ${slideClass}`}>
             <div className="flex items-center gap-3 mb-5">
               <div className="w-10 h-10 rounded-xl bg-indigo-light flex items-center justify-center">

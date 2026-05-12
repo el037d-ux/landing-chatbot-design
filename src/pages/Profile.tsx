@@ -451,7 +451,7 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-indigo-light/30 to-teal-light/20">
       <nav className="bg-white/95 backdrop-blur-md border-b border-border sticky top-0 z-20">
-        <div className="container max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="container max-w-4xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <button onClick={() => navigate("/")} className="flex items-center gap-2.5">
             <span className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center shadow-md shadow-primary/30">
               <Icon name="GraduationCap" size={16} className="text-white" />
@@ -464,7 +464,7 @@ export default function Profile() {
         </div>
       </nav>
 
-      <div className="container max-w-4xl mx-auto px-6 py-8 space-y-6">
+      <div className="container max-w-4xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         <div className="bg-white rounded-3xl border border-border shadow-sm p-6 flex items-center gap-5">
           <div className="w-14 h-14 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/25 flex-shrink-0">
             <span className="font-display text-2xl font-bold text-white">
