@@ -36,7 +36,13 @@ export function UserProvider({ children }: { children: ReactNode }) {
         headers: { "Authorization": `Bearer ${t}`, "Content-Type": "application/json" },
       });
       const data = await res.json();
-      if (data.ok) setStatus(data);
+      if (data.ok) {
+        setStatus(data);
+      } else if (res.status === 401) {
+        localStorage.removeItem("urok_token");
+        setToken(null);
+        setStatus(null);
+      }
     } catch (e) { console.error("fetchStatus error", e); }
     finally { setLoading(false); }
   };
