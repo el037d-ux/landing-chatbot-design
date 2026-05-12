@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import Icon from "@/components/ui/icon";
 
 const HERO_IMAGE = "https://cdn.poehali.dev/projects/3a27d5a9-016a-43ab-946d-4c4fe8129705/bucket/fb741ecb-cd4a-4766-ba6b-9c590c24dfe7.png";
@@ -6,6 +7,7 @@ const HERO_IMAGE = "https://cdn.poehali.dev/projects/3a27d5a9-016a-43ab-946d-4c4
 function Navbar({ onStart, onAuth, onPayment, onProfile }: { onStart: () => void; onAuth: () => void; onPayment: () => void; onProfile: () => void }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 20);
@@ -43,6 +45,10 @@ function Navbar({ onStart, onAuth, onPayment, onProfile }: { onStart: () => void
         </div>
 
         <div className="hidden md:flex items-center gap-3">
+          <button onClick={() => navigate("/quests")} className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border text-sm font-body font-semibold text-amber hover:border-amber/40 hover:bg-amber/5 transition-all">
+            <Icon name="Swords" size={14} className="text-amber" />
+            Квесты
+          </button>
           <button onClick={onPayment} className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border text-sm font-body font-semibold text-primary hover:border-primary/40 hover:bg-primary/5 transition-all">
             <Icon name="Crown" size={14} className="text-primary" />
             Тарифы
@@ -67,6 +73,9 @@ function Navbar({ onStart, onAuth, onPayment, onProfile }: { onStart: () => void
             </a>
           ))}
           <div className="pt-2 space-y-2">
+            <button onClick={() => { navigate("/quests"); setMenuOpen(false); }} className="w-full py-2.5 text-sm font-body font-semibold border border-amber/30 text-amber rounded-xl flex items-center justify-center gap-2">
+              <Icon name="Swords" size={14} />Квесты
+            </button>
             <button onClick={onPayment} className="w-full py-2.5 text-sm font-body font-semibold border border-primary/30 text-primary rounded-xl flex items-center justify-center gap-2">
               <Icon name="Crown" size={14} />Тарифы
             </button>
