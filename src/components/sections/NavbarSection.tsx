@@ -116,7 +116,7 @@ function Hero({ onStart, onGame, onAnalysis, onPayment, lessonsLeft, gamesLeft, 
             <span className="text-xs font-body font-semibold">ИИ для педагогов нового поколения</span>
           </div>
 
-          <h1 className="font-display text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] text-foreground mb-5 sm:mb-6 animate-fade-in-up delay-100">
+          <h1 style={{ fontFamily: "'Comic Sans MS', 'Comic Sans', cursive" }} className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold leading-[1.1] text-foreground mb-5 sm:mb-6 animate-fade-in-up delay-100">
             Готовьте уроки{" "}
             <span className="gradient-text">в 10 раз быстрее</span>{" "}
             с помощью ИИ
