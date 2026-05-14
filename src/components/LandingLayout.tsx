@@ -22,7 +22,7 @@ export default function LandingLayout({ onStart, onGame, onAnalysis, onAuth, onP
       <About />
       <ChatDemo onPayment={onPayment} />
       <FAQ />
-      <CTA onStart={onStart} />
+      <CTA onStart={onStart} onPayment={onPayment} />
       <Contacts />
       <Footer />
     </>

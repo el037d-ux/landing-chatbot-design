@@ -1,6 +1,6 @@
 import Icon from "@/components/ui/icon";
 
-function CTA({ onStart }: { onStart: () => void }) {
+function CTA({ onStart, onPayment }: { onStart: () => void; onPayment: () => void }) {
   return (
     <section className="py-16 sm:py-24 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-primary via-[hsl(243,75%,45%)] to-[hsl(174,62%,30%)]" />
@@ -27,7 +27,7 @@ function CTA({ onStart }: { onStart: () => void }) {
           >
             Начать бесплатно
           </button>
-          <button className="px-8 py-3.5 rounded-xl border border-white/30 text-white font-body font-medium hover:bg-white/12 transition-colors">
+          <button onClick={onPayment} className="px-8 py-3.5 rounded-xl border border-white/30 text-white font-body font-medium hover:bg-white/12 transition-colors">
             Подробнее о тарифах
           </button>
         </div>
