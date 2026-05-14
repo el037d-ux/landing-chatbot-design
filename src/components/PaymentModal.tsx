@@ -152,10 +152,7 @@ export default function PaymentModal({ onClose }: { onClose: () => void }) {
                 </div>
               ))}
 
-              <div className="p-4 rounded-2xl bg-slate border border-border text-center">
-                <div className="font-body text-sm font-semibold text-foreground mb-1">Бесплатно всегда</div>
-                <div className="font-body text-xs text-muted-foreground">3 плана урока · 3 игры · без самоанализа</div>
-              </div>
+
             </>
           )}
 

@@ -51,10 +51,7 @@ function Navbar({ onStart, onAuth, onPayment, onProfile }: { onStart: () => void
             <Icon name="Swords" size={14} className="text-amber" />
             Квесты
           </button>
-          <button onClick={onPayment} className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-border text-sm font-body font-semibold text-primary hover:border-primary/40 hover:bg-primary/5 transition-all">
-            <Icon name="Crown" size={14} className="text-primary" />
-            Тарифы
-          </button>
+
           {token ? (
             <button onClick={onProfile} className="flex items-center gap-2 px-4 py-2 rounded-xl bg-primary text-white text-sm font-body font-semibold hover:bg-primary/90 transition-all shadow-md shadow-primary/25 active:scale-95">
               <div className="w-5 h-5 rounded-lg bg-white/20 flex items-center justify-center text-xs font-bold leading-none">
@@ -87,9 +84,7 @@ function Navbar({ onStart, onAuth, onPayment, onProfile }: { onStart: () => void
             <button onClick={() => { navigate("/quests"); setMenuOpen(false); }} className="w-full py-2.5 text-sm font-body font-semibold border border-amber/30 text-amber rounded-xl flex items-center justify-center gap-2">
               <Icon name="Swords" size={14} />Квесты
             </button>
-            <button onClick={() => { onPayment(); setMenuOpen(false); }} className="w-full py-2.5 text-sm font-body font-semibold border border-primary/30 text-primary rounded-xl flex items-center justify-center gap-2">
-              <Icon name="Crown" size={14} />Тарифы
-            </button>
+
             {token ? (
               <button onClick={() => { onProfile(); setMenuOpen(false); }} className="w-full py-2.5 text-sm font-body font-semibold bg-primary text-white rounded-xl flex items-center justify-center gap-2">
                 <Icon name="User" size={14} />Личный кабинет
