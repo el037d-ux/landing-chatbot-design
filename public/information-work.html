@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Работа с информацией</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .section p {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .info-types {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .info-type-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .info-type-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-type-card h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .info-type-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .info-type-card li {
+            padding: 8px 0;
+            color: #555;
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .info-type-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .process-steps {
+            counter-reset: step-counter;
+            list-style: none;
+        }
+
+        .process-steps li {
+            position: relative;
+            padding-left: 60px;
+            margin-bottom: 25px;
+            padding-top: 10px;
+        }
+
+        .process-steps li:before {
+            counter-increment: step-counter;
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .process-steps li strong {
+            color: #667eea;
+            font-size: 1.2em;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .interactive-demo {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .interactive-demo h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .demo-controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .demo-controls input,
+        .demo-controls select,
+        .demo-controls button {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .demo-controls input:focus,
+        .demo-controls select:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .demo-controls button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .demo-controls button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .demo-result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            border: 2px dashed #667eea;
+            min-height: 100px;
+        }
+
+        .demo-result h4 {
+            color: #764ba2;
+            margin-bottom: 10px;
+        }
+
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Работа с информацией</h1>
+            <p>Интерактивное руководство по обработке и управлению данными</p>
+        </header>
+
+        <div class="content">
+            <div class="section">
+                <h2>Что такое информация?</h2>
+                <p>
+                    <strong>Информация</strong> — это сведения об объектах и процессах, хранящиеся и передаваемые с помощью знаков и сигналов.
+                    В современном мире работа с информацией является ключевым навыком для успешной деятельности в любой сфере.
+                </p>
+                <p>
+                    Информация может существовать в различных формах и требует правильной организации, обработки и анализа
+                    для эффективного использования.
+                </p>
+            </div>
+
+            <div class="section">
+                <h2>Виды информации</h2>
+                <div class="info-types">
+                    <div class="info-type-card">
+                        <h3>📝 По форме представления</h3>
+                        <ul>
+                            <li>Текстовая</li>
+                            <li>Числовая</li>
+                            <li>Графическая</li>
+                            <li>Звуковая</li>
+                            <li>Видеоинформация</li>
+                        </ul>
+                    </div>
+                    <div class="info-type-card">
+                        <h3>🌍 По способу восприятия</h3>
+                        <ul>
+                            <li>Визуальная</li>
+                            <li>Аудиальная</li>
+                            <li>Тактильная</li>
+                            <li>Обонятельная</li>
+                            <li>Вкусовая</li>
+                        </ul>
+                    </div>
+                    <div class="info-type-card">
+                        <h3>💼 По значимости</h3>
+                        <ul>
+                            <li>Актуальная</li>
+                            <li>Достоверная</li>
+                            <li>Полная</li>
+                            <li>Полезная</li>
+                            <li>Понятная</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>Основные процессы работы с информацией</h2>
+                <ol class="process-steps">
+                    <li>
+                        <strong>Сбор информации</strong>
+                        Получение данных из различных источников: наблюдение, измерение, опросы, поиск в интернете,
+                        чтение документов, прослушивание аудио и просмотр видео.
+                    </li>
+                    <li>
+                        <strong>Хранение информации</strong>
+                        Сохранение данных на различных носителях: бумага, электронные устройства, облачные хранилища,
+                        базы данных. Важна организация хранения для быстрого доступа.
+                    </li>
+                    <li>
+                        <strong>Обработка информации</strong>
+                        Преобразование данных: сортировка, фильтрация, вычисления, группировка, анализ,
+                        создание новых данных на основе существующих.
+                    </li>
+                    <li>
+                        <strong>Передача информации</strong>
+                        Распространение данных между людьми и системами: устная речь, письменные сообщения,
+                        электронная почта, интернет, социальные сети.
+                    </li>
+                    <li>
+                        <strong>Защита информации</strong>
+                        Обеспечение конфиденциальности, целостности и доступности данных: шифрование,
+                        резервное копирование, контроль доступа, антивирусная защита.
+                    </li>
+                </ol>
+            </div>
+
+            <div class="section">
+                <h2>Интерактивная демонстрация</h2>
+                <p>Попробуйте сами обработать информацию с помощью нашего интерактивного инструмента:</p>
+
+                <div class="interactive-demo">
+                    <h3>🔧 Обработчик текста</h3>
+                    <div class="demo-controls">
+                        <input type="text" id="textInput" placeholder="Введите текст для обработки..." style="flex: 1; min-width: 200px;">
+                        <select id="operationSelect">
+                            <option value="uppercase">Преобразовать в верхний регистр</option>
+                            <option value="lowercase">Преобразовать в нижний регистр</option>
+                            <option value="reverse">Развернуть текст</option>
+                            <option value="length">Подсчитать длину</option>
+                            <option value="words">Подсчитать слова</option>
+                            <option value="removeSpaces">Удалить пробелы</option>
+                        </select>
+                        <button onclick="processText()">Обработать</button>
+                        <button onclick="clearText()" style="background: #dc3545;">Очистить</button>
+                    </div>
+                    <div class="demo-result">
+                        <h4>Результат обработки:</h4>
+                        <p id="resultOutput">Здесь появится результат...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>📝 Практические задания для самопроверки</h2>
+                <p>Проверьте свои знания с помощью интерактивных заданий:</p>
+
+                <div class="quiz-container" style="margin-top: 20px;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">Задание 1: Тест по теме "Работа с информацией"</h3>
+                    <div id="quiz">
+                        <div class="question" style="margin-bottom: 20px;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">1. Что из перечисленного НЕ является видом информации по форме представления?</p>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q1" value="a"> Текстовая</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q1" value="b"> Визуальная</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q1" value="c"> Числовая</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q1" value="d"> Графическая</label>
+                        </div>
+
+                        <div class="question" style="margin-bottom: 20px;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">2. Какой процесс работы с информацией включает в себя сортировку и фильтрацию данных?</p>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q2" value="a"> Сбор</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q2" value="b"> Хранение</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q2" value="c"> Обработка</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q2" value="d"> Передача</label>
+                        </div>
+
+                        <div class="question" style="margin-bottom: 20px;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">3. Какая информация считается достоверной?</p>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q3" value="a"> Новая</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q3" value="b"> Соответствующая действительности</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q3" value="c"> Быстро полученная</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q3" value="d"> Подробная</label>
+                        </div>
+
+                        <div class="question" style="margin-bottom: 20px;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">4. Что НЕ относится к способам защиты информации?</p>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q4" value="a"> Шифрование</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q4" value="b"> Резервное копирование</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q4" value="c"> Удаление всех данных</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q4" value="d"> Контроль доступа</label>
+                        </div>
+
+                        <div class="question" style="margin-bottom: 20px;">
+                            <p style="font-weight: bold; margin-bottom: 10px;">5. К визуальной информации относится:</p>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q5" value="a"> Музыка</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q5" value="b"> Текст книги</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q5" value="c"> Запах цветов</label>
+                            <label style="display: block; padding: 8px; cursor: pointer;"><input type="radio" name="q5" value="d"> Вкус еды</label>
+                        </div>
+
+                        <button onclick="checkQuiz()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 5px; font-size: 1em; cursor: pointer; font-weight: bold;">Проверить ответы</button>
+                        <div id="quizResult" style="margin-top: 20px; padding: 15px; border-radius: 5px; display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="practice-exercise" style="margin-top: 30px; padding: 20px; background: #e8f4f8; border-radius: 10px;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">Задание 2: Классификация информации</h3>
+                    <p style="margin-bottom: 15px;">Распределите примеры по видам информации:</p>
+
+                    <div class="classification-task">
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Пример: "Температура воздуха 25°C"</p>
+                            <select id="class1" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите вид информации...</option>
+                                <option value="text">Текстовая</option>
+                                <option value="numeric">Числовая</option>
+                                <option value="graphic">Графическая</option>
+                                <option value="sound">Звуковая</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Пример: "Музыкальная композиция"</p>
+                            <select id="class2" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите вид информации...</option>
+                                <option value="text">Текстовая</option>
+                                <option value="numeric">Числовая</option>
+                                <option value="graphic">Графическая</option>
+                                <option value="sound">Звуковая</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Пример: "Фотография пейзажа"</p>
+                            <select id="class3" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите вид информации...</option>
+                                <option value="text">Текстовая</option>
+                                <option value="numeric">Числовая</option>
+                                <option value="graphic">Графическая</option>
+                                <option value="sound">Звуковая</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Пример: "Статья в журнале"</p>
+                            <select id="class4" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите вид информации...</option>
+                                <option value="text">Текстовая</option>
+                                <option value="numeric">Числовая</option>
+                                <option value="graphic">Графическая</option>
+                                <option value="sound">Звуковая</option>
+                            </select>
+                        </div>
+
+                        <button onclick="checkClassification()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 5px; font-size: 1em; cursor: pointer; font-weight: bold;">Проверить классификацию</button>
+                        <div id="classResult" style="margin-top: 20px; padding: 15px; border-radius: 5px; display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="matching-task" style="margin-top: 30px; padding: 20px; background: #fff3e0; border-radius: 10px;">
+                    <h3 style="color: #764ba2; margin-bottom: 15px;">Задание 3: Сопоставление процессов</h3>
+                    <p style="margin-bottom: 15px;">Сопоставьте действие с соответствующим процессом работы с информацией:</p>
+
+                    <div class="matching-pairs">
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Действие: "Сохранение файла на флеш-накопитель"</p>
+                            <select id="match1" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите процесс...</option>
+                                <option value="collection">Сбор</option>
+                                <option value="storage">Хранение</option>
+                                <option value="processing">Обработка</option>
+                                <option value="transfer">Передача</option>
+                                <option value="protection">Защита</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Действие: "Отправка электронного письма"</p>
+                            <select id="match2" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите процесс...</option>
+                                <option value="collection">Сбор</option>
+                                <option value="storage">Хранение</option>
+                                <option value="processing">Обработка</option>
+                                <option value="transfer">Передача</option>
+                                <option value="protection">Защита</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Действие: "Вычисление среднего значения в таблице"</p>
+                            <select id="match3" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите процесс...</option>
+                                <option value="collection">Сбор</option>
+                                <option value="storage">Хранение</option>
+                                <option value="processing">Обработка</option>
+                                <option value="transfer">Передача</option>
+                                <option value="protection">Защита</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-weight: bold;">Действие: "Установка пароля на документ"</p>
+                            <select id="match4" style="padding: 8px; border: 2px solid #ddd; border-radius: 5px; width: 100%; max-width: 300px;">
+                                <option value="">Выберите процесс...</option>
+                                <option value="collection">Сбор</option>
+                                <option value="storage">Хранение</option>
+                                <option value="processing">Обработка</option>
+                                <option value="transfer">Передача</option>
+                                <option value="protection">Защита</option>
+                            </select>
+                        </div>
+
+                        <button onclick="checkMatching()" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; padding: 12px 30px; border-radius: 5px; font-size: 1em; cursor: pointer; font-weight: bold;">Проверить сопоставление</button>
+                        <div id="matchResult" style="margin-top: 20px; padding: 15px; border-radius: 5px; display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2>💡 Информационная грамотность</h2>
+                <p>В современном мире критически важно развивать навыки работы с информацией:</p>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li>Умение находить достоверную информацию</li>
+                    <li>Критическое мышление и оценка источников</li>
+                    <li>Навыки фильтрации информационного шума</li>
+                    <li>Эффективное использование информационных технологий</li>
+                    <li>Соблюдение этических норм при работе с данными</li>
+                    <li>Понимание вопросов информационной безопасности</li>
+                </ul>
+            </div>
+        </div>
+
+        <footer>
+            <p>© 2024 Работа с информацией | Образовательный проект</p>
+        </footer>
+    </div>
+
+    <script>
+        function processText() {
+            const text = document.getElementById('textInput').value;
+            const operation = document.getElementById('operationSelect').value;
+            const resultOutput = document.getElementById('resultOutput');
+
+            if (!text.trim()) {
+                resultOutput.textContent = '⚠️ Пожалуйста, введите текст для обработки';
+                resultOutput.style.color = '#dc3545';
+                return;
+            }
+
+            let result = '';
+
+            switch(operation) {
+                case 'uppercase':
+                    result = text.toUpperCase();
+                    break;
+                case 'lowercase':
+                    result = text.toLowerCase();
+                    break;
+                case 'reverse':
+                    result = text.split('').reverse().join('');
+                    break;
+                case 'length':
+                    result = `Длина текста: ${text.length} символов(а)`;
+                    break;
+                case 'words':
+                    const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+                    result = `Количество слов: ${words.length}`;
+                    break;
+                case 'removeSpaces':
+                    result = text.replace(/\s/g, '');
+                    break;
+                default:
+                    result = 'Выберите операцию';
+            }
+
+            resultOutput.textContent = result;
+            resultOutput.style.color = '#333';
+        }
+
+        function clearText() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('resultOutput').textContent = 'Здесь появится результат...';
+            document.getElementById('resultOutput').style.color = '#333';
+        }
+
+        document.getElementById('textInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processText();
+            }
+        });
+
+        function checkQuiz() {
+            const answers = { q1: 'b', q2: 'c', q3: 'b', q4: 'c', q5: 'b' };
+            let score = 0;
+            const total = 5;
+
+            for (let i = 1; i <= total; i++) {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected && selected.value === answers[`q${i}`]) score++;
+            }
+
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.style.display = 'block';
+
+            if (score === total) {
+                resultDiv.style.background = '#d4edda';
+                resultDiv.style.color = '#155724';
+                resultDiv.innerHTML = `<strong>🎉 Отлично!</strong> Вы набрали ${score} из ${total} баллов. Все ответы верны!`;
+            } else if (score >= 3) {
+                resultDiv.style.background = '#fff3cd';
+                resultDiv.style.color = '#856404';
+                resultDiv.innerHTML = `<strong>👍 Хорошо!</strong> Вы набрали ${score} из ${total} баллов. Но можно лучше!`;
+            } else {
+                resultDiv.style.background = '#f8d7da';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = `<strong>📚 Нужно повторить!</strong> Вы набрали ${score} из ${total} баллов. Рекомендуется изучить материал ещё раз.`;
+            }
+        }
+
+        function checkClassification() {
+            const answers = { class1: 'numeric', class2: 'sound', class3: 'graphic', class4: 'text' };
+            let correct = 0;
+            const total = 4;
+
+            for (let i = 1; i <= total; i++) {
+                if (document.getElementById(`class${i}`).value === answers[`class${i}`]) correct++;
+            }
+
+            const resultDiv = document.getElementById('classResult');
+            resultDiv.style.display = 'block';
+
+            if (correct === total) {
+                resultDiv.style.background = '#d4edda';
+                resultDiv.style.color = '#155724';
+                resultDiv.innerHTML = `<strong>🎉 Превосходно!</strong> Все ${correct} из ${total} ответов верны!`;
+            } else if (correct >= 2) {
+                resultDiv.style.background = '#fff3cd';
+                resultDiv.style.color = '#856404';
+                resultDiv.innerHTML = `<strong>👍 Неплохо!</strong> ${correct} из ${total} правильных ответов.`;
+            } else {
+                resultDiv.style.background = '#f8d7da';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = `<strong>📚 Попробуйте ещё раз!</strong> Правильно только ${correct} из ${total}.`;
+            }
+        }
+
+        function checkMatching() {
+            const answers = { match1: 'storage', match2: 'transfer', match3: 'processing', match4: 'protection' };
+            let correct = 0;
+            const total = 4;
+
+            for (let i = 1; i <= total; i++) {
+                if (document.getElementById(`match${i}`).value === answers[`match${i}`]) correct++;
+            }
+
+            const resultDiv = document.getElementById('matchResult');
+            resultDiv.style.display = 'block';
+
+            if (correct === total) {
+                resultDiv.style.background = '#d4edda';
+                resultDiv.style.color = '#155724';
+                resultDiv.innerHTML = `<strong>🎉 Великолепно!</strong> Все ${correct} из ${total} сопоставлений верны!`;
+            } else if (correct >= 2) {
+                resultDiv.style.background = '#fff3cd';
+                resultDiv.style.color = '#856404';
+                resultDiv.innerHTML = `<strong>👍 Хорошо!</strong> ${correct} из ${total} правильных сопоставлений.`;
+            } else {
+                resultDiv.style.background = '#f8d7da';
+                resultDiv.style.color = '#721c24';
+                resultDiv.innerHTML = `<strong>📚 Изучите процессы ещё раз!</strong> Только ${correct} из ${total} верны.`;
+            }
+        }
+    </script>
+</body>
+</html>

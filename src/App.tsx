@@ -12,6 +12,7 @@ import Activate from "./pages/Activate";
 import NotFound from "./pages/NotFound";
 import Quests from "./pages/Quests";
 import OodbQuest from "./pages/OodbQuest";
+import InformationWorkQuest from "./pages/InformationWorkQuest";
 import { UserProvider } from "./context/UserContext";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,7 @@ const App = () => (
             <Route path="/activate/:token" element={<Activate />} />
             <Route path="/quests" element={<Quests />} />
             <Route path="/quests/oodb" element={<OodbQuest />} />
+            <Route path="/quests/information-work" element={<InformationWorkQuest />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
