@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SMART-цели | Обучающая программа</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --primary: #6366f1;
+      --accent: #8b5cf6;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --border: #334155;
+      --gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .container {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 800px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 1.9rem;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 25px;
+      font-size: 1.05rem;
+    }
+    .screen { display: none; animation: fade 0.4s ease; }
+    .screen.active { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 14px 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      font-weight: 500;
+      transition: all 0.25s;
+      width: 100%;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn:hover { 
+      background: #4f46e5; 
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+    }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+    .btn-outline:hover { background: rgba(99, 102, 241, 0.15); }
+    .btn-success { background: var(--success); }
+    .btn-success:hover { background: #16a34a; }
+
+    .theory-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 15px 0;
+      border-left: 4px solid var(--accent);
+    }
+    .theory-card h3 {
+      color: var(--accent);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .smart-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      background: var(--gradient);
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-right: 8px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .progress-bar {
+      height: 8px;
+      background: #334155;
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 25px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--gradient);
+      width: 0%;
+      transition: width 0.5s ease;
+      border-radius: 4px;
+    }
+
+    .exercise {
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 15px 0;
+      border: 1px solid var(--border);
+    }
+    .exercise-title {
+      font-weight: 600;
+      margin-bottom: 12px;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .input-group { margin: 12px 0; }
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.95rem;
+      color: var(--muted);
+    }
+    .input-group input,
+    .input-group textarea,
+    .input-group select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #0f172a;
+      color: var(--text);
+      font-size: 1rem;
+      transition: border-color 0.2s;
+    }
+    .input-group input:focus,
+    .input-group textarea:focus,
+    .input-group select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+    }
+    .input-group textarea { min-height: 80px; resize: vertical; }
+    .input-group input.fio-input {
+      font-size: 1.1rem;
+      font-weight: 500;
+      text-align: center;
+      padding: 14px;
+      background: rgba(99, 102, 241, 0.1);
+      border-color: var(--accent);
+    }
+
+    .options-grid { display: grid; gap: 10px; margin: 15px 0; }
+    .option-card {
+      background: rgba(30, 41, 59, 0.8);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .option-card:hover { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+    .option-card.selected { border-color: var(--accent); background: rgba(139, 92, 246, 0.15); }
+    .option-card.correct { border-color: var(--success); background: rgba(34, 197, 94, 0.15); }
+    .option-card.wrong { border-color: var(--error); background: rgba(239, 68, 68, 0.15); }
+    .option-radio {
+      width: 20px;
+      height: 20px;
+      border: 2px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .option-card.selected .option-radio,
+    .option-card.correct .option-radio {
+      border-color: var(--success);
+      background: var(--success);
+    }
+    .option-card.selected .option-radio::after,
+    .option-card.correct .option-radio::after {
+      content: "✓";
+      color: white;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .feedback {
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 10px;
+      display: none;
+      font-size: 0.95rem;
+    }
+    .feedback.show { display: block; animation: slideIn 0.3s ease; }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .feedback.ok { background: rgba(34, 197, 94, 0.15); border-left: 3px solid var(--success); color: #86efac; }
+    .feedback.err { background: rgba(239, 68, 68, 0.15); border-left: 3px solid var(--error); color: #fca5a5; }
+    .feedback.tip { background: rgba(245, 158, 11, 0.15); border-left: 3px solid var(--warning); color: #fcd34d; }
+
+    .example-box {
+      background: rgba(30, 41, 59, 0.6);
+      border-radius: 10px;
+      padding: 15px;
+      margin: 12px 0;
+      border-left: 3px solid var(--warning);
+    }
+    .example-box.bad { border-left-color: var(--error); }
+    .example-box.good { border-left-color: var(--success); }
+    .example-label {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 5px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .result-badge {
+      text-align: center;
+      padding: 25px 20px;
+      background: rgba(34, 197, 94, 0.1);
+      border: 2px solid var(--success);
+      border-radius: 16px;
+      margin: 20px 0;
+    }
+    .result-badge h3 { color: var(--success); font-size: 1.5rem; margin-bottom: 10px; }
+    .score-display {
+      font-size: 3rem;
+      font-weight: bold;
+      background: var(--gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin: 15px 0;
+    }
+    .certificate {
+      background: rgba(15, 23, 42, 0.8);
+      border: 2px solid var(--accent);
+      border-radius: 16px;
+      padding: 25px;
+      text-align: center;
+      margin: 20px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .certificate::before {
+      content: "🏆";
+      position: absolute;
+      top: -20px;
+      right: -20px;
+      font-size: 8rem;
+      opacity: 0.1;
+      transform: rotate(15deg);
+    }
+    .certificate-title { font-size: 1.4rem; color: var(--accent); margin-bottom: 15px; }
+    .certificate-name { font-size: 1.8rem; font-weight: bold; margin: 10px 0; color: var(--text); }
+    .certificate-date { color: var(--muted); margin-top: 15px; font-size: 0.95rem; }
+
+    .nav-buttons { display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap; }
+    .nav-buttons .btn { flex: 1; min-width: 120px; margin: 0; }
+
+    .fio-error { color: var(--error); font-size: 0.85rem; margin-top: 5px; display: none; }
+    .fio-error.show { display: block; }
+    .input-group.valid input { border-color: var(--success); box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2); }
+
+    @media (max-width: 600px) {
+      .container { padding: 20px; }
+      h1 { font-size: 1.6rem; }
+      .btn { padding: 12px 18px; font-size: 1rem; }
+      .score-display { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div id="start-screen" class="screen active">
+    <h1>🎯 SMART-цели</h1>
+    <p class="subtitle">Интерактивный курс по постановке эффективных целей</p>
+    
+    <div class="theory-card">
+      <h3><span class="smart-letter">S</span>Что такое SMART?</h3>
+      <p><strong>SMART</strong> — аббревиатура пяти критериев качественной цели:</p>
+      <ul style="margin: 12px 0 0 20px; color: var(--muted);">
+        <li><strong>S</strong>pecific — Конкретная</li>
+        <li><strong>M</strong>easurable — Измеримая</li>
+        <li><strong>A</strong>chievable — Достижимая</li>
+        <li><strong>R</strong>elevant — Релевантная</li>
+        <li><strong>T</strong>ime-bound — Ограниченная по времени</li>
+      </ul>
+    </div>
+
+    <div class="exercise" style="margin: 20px 0;">
+      <div class="exercise-title">👤 Данные для сертификата</div>
+      <div class="input-group">
+        <label for="fio-input">Ваше ФИО (как в сертификате):</label>
+        <input type="text" id="fio-input" class="fio-input" placeholder="Иванова Мария Сергеевна" autocomplete="name" maxlength="100">
+        <div class="fio-error" id="fio-error">⚠️ Пожалуйста, введите ФИО (минимум 3 символа)</div>
+      </div>
+    </div>
+
+    <button class="btn" onclick="startCourse()">🚀 Начать обучение</button>
+    <button class="btn btn-outline" onclick="showTheory()">📚 Сначала теория</button>
+  </div>
+
+  <div id="theory-screen" class="screen">
+    <div class="progress-header">
+      <span>Теория</span>
+      <span id="theory-progress">0/5</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="theory-bar"></div></div>
+    <div id="theory-content"></div>
+    <div class="nav-buttons">
+      <button class="btn btn-outline" id="prev-theory" onclick="changeTheory(-1)" disabled>← Назад</button>
+      <button class="btn" id="next-theory" onclick="changeTheory(1)">Далее →</button>
+    </div>
+    <button class="btn btn-success" id="start-practice" onclick="startPractice()" style="display:none; margin-top:15px;">
+      ✅ Перейти к практике
+    </button>
+  </div>
+
+  <div id="practice-screen" class="screen">
+    <div class="progress-header">
+      <span>Практика</span>
+      <span id="practice-progress">Уровень 1/6</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="practice-bar"></div></div>
+    <div id="exercise-container"></div>
+    <div class="feedback" id="practice-feedback"></div>
+    <div class="nav-buttons">
+      <button class="btn" id="check-answer" onclick="checkPracticeAnswer()">Проверить ответ</button>
+      <button class="btn btn-outline" id="next-exercise" onclick="nextExercise()" style="display:none;">Следующий уровень →</button>
+    </div>
+  </div>
+
+  <div id="result-screen" class="screen">
+    <h2 style="text-align:center; margin-bottom:20px;">🎉 Курс завершён!</h2>
+    <div class="result-badge">
+      <h3>Ваш результат</h3>
+      <div class="score-display" id="final-score">0/6</div>
+      <p id="result-message" style="color:var(--muted);"></p>
+    </div>
+    <div class="certificate">
+      <div class="certificate-title">Сертификат об окончании</div>
+      <p style="color:var(--muted);">Настоящим подтверждается, что</p>
+      <div class="certificate-name" id="cert-name">Пользователь</div>
+      <p style="color:var(--muted); margin:8px 0;">успешно освоил(а) методику постановки SMART-целей</p>
+      <div class="certificate-date" id="cert-date"></div>
+    </div>
+    <button class="btn" onclick="downloadCertificate()">💾 Сохранить сертификат</button>
+    <button class="btn btn-outline" onclick="location.reload()">🔄 Пройти заново</button>
+  </div>
+</div>
+
+<script>
+  const smartTheory = [
+    {
+      letter: "S",
+      title: "Specific — Конкретная",
+      content: `
+        <p>Цель должна быть чёткой и однозначной. Избегайте размытых формулировок.</p>
+        <div class="example-box bad"><div class="example-label">❌ Неудачно</div>«Стать лучше в работе»</div>
+        <div class="example-box good"><div class="example-label">✅ SMART</div>«Повысить скорость обработки заявок с 5 до 3 дней к концу квартала»</div>
+        <p style="margin-top:12px; color:var(--muted); font-size:0.95rem;"><strong>Вопросы для проверки:</strong> Что именно нужно сделать? Кто участвует? Где? Какие ограничения?</p>
+      `
+    },
+    {
+      letter: "M",
+      title: "Measurable — Измеримая",
+      content: `
+        <p>Цель должна иметь критерии измерения успеха. Без метрик невозможно понять, достигнута ли цель.</p>
+        <div class="example-box bad"><div class="example-label">❌ Неудачно</div>«Улучшить обслуживание клиентов»</div>
+        <div class="example-box good"><div class="example-label">✅ SMART</div>«Повысить индекс удовлетворённости клиентов (CSAT) с 78% до 90% за 6 месяцев»</div>
+        <p style="margin-top:12px; color:var(--muted); font-size:0.95rem;"><strong>Метрики:</strong> проценты, суммы, количество, время, рейтинги, баллы.</p>
+      `
+    },
+    {
+      letter: "A",
+      title: "Achievable — Достижимая",
+      content: `
+        <p>Цель должна быть реалистичной с учётом ресурсов, компетенций и времени.</p>
+        <div class="example-box bad"><div class="example-label">❌ Неудачно</div>«Увеличить продажи в 10 раз за месяц без дополнительного бюджета»</div>
+        <div class="example-box good"><div class="example-label">✅ SMART</div>«Увеличить продажи на 25% за квартал за счёт запуска email-рассылки и обучения менеджеров»</div>
+        <p style="margin-top:12px; color:var(--muted); font-size:0.95rem;"><strong>Проверка:</strong> Есть ли ресурсы? Достаточно ли компетенций? Реалистичен ли срок?</p>
+      `
+    },
+    {
+      letter: "R",
+      title: "Relevant — Релевантная",
+      content: `
+        <p>Цель должна соответствовать стратегическим задачам, ценностям и приоритетам.</p>
+        <div class="example-box bad"><div class="example-label">❌ Неудачно</div>«Изучить новый язык программирования» (когда задача — улучшить навыки переговоров)</div>
+        <div class="example-box good"><div class="example-label">✅ SMART</div>«Пройти курс по ведению сложных переговоров до конца месяца, чтобы повысить конверсию сделок на 15%»</div>
+        <p style="margin-top:12px; color:var(--muted); font-size:0.95rem;"><strong>Вопрос:</strong> Как эта цель приближает меня к главной задаче?</p>
+      `
+    },
+    {
+      letter: "T",
+      title: "Time-bound — Ограниченная по времени",
+      content: `
+        <p>У каждой цели должен быть чёткий дедлайн. Без срока задача откладывается «на потом».</p>
+        <div class="example-box bad"><div class="example-label">❌ Неудачно</div>«Написать статью»</div>
+        <div class="example-box good"><div class="example-label">✅ SMART</div>«Написать и опубликовать статью в корпоративном блоге до 25 ноября 2025 года»</div>
+        <p style="margin-top:12px; color:var(--muted); font-size:0.95rem;"><strong>Совет:</strong> Разбивайте долгосрочные цели на этапы с промежуточными дедлайнами.</p>
+      `
+    }
+  ];
+
+  const practiceExercises = [
+    {
+      type: "quiz",
+      title: "Определи нарушение SMART",
+      question: "Какой критерий SMART нарушен в цели: «Улучшить работу отдела»?",
+      options: ["Specific (неконкретная)", "Measurable (неизмеримая)", "Achievable (нереалистичная)", "Все вышеперечисленные"],
+      correct: 3,
+      explanation: "Верно! Формулировка нарушает сразу несколько критериев: нет конкретики (что именно улучшить?), нет метрик успеха, нет срока."
+    },
+    {
+      type: "input",
+      title: "S — Конкретизируй цель",
+      instruction: "Преобразуйте размытую цель в конкретную по критерию Specific:",
+      badExample: "«Развить навыки»",
+      placeholder: "Например: «Пройти курс по тайм-менеджменту и применить 3 техники в работе»",
+      check: (val) => {
+        const lower = val.toLowerCase();
+        const hasAction = /(пройти|изучить|освоить|написать|сделать|запустить|увеличить|снизить)/.test(lower);
+        const hasObject = /(курс|навык|техника|проект|отчёт|заявка|клиент|продаж)/.test(lower);
+        return hasAction && hasObject && val.length > 20;
+      },
+      hint: "Добавьте: что именно сделать? над чем? в каком контексте?"
+    },
+    {
+      type: "input",
+      title: "M + T — Измеримость и срок",
+      instruction: "Добавьте метрику и дедлайн к цели:",
+      badExample: "«Повысить лояльность клиентов»",
+      placeholder: "Например: «Повысить NPS с 45 до 60 баллов к 31 марта 2026 года»",
+      check: (val) => {
+        const lower = val.toLowerCase();
+        const hasMetric = /(до \d+|с \d+ до \d+|на \d+%|\d+ баллов|\d+ процентов)/.test(lower);
+        const hasDate = /(январ|феврал|март|апрел|май|июн|июл|авг|сент|окт|нояб|дек|квартал|год|\d{1,2}\.\d{1,2}\.\d{4})/.test(lower);
+        return hasMetric && hasDate && val.length > 25;
+      },
+      hint: "Используйте цифры (%, баллы, штуки) и укажите точную дату или период."
+    },
+    {
+      type: "quiz",
+      title: "Оцени достижимость",
+      question: "Какая из целей наиболее достижима (Achievable) при ограниченных ресурсах?",
+      options: [
+        "«Запустить 5 новых продуктов за месяц»",
+        "«Протестировать гипотезу на одной фокус-группе за 2 недели»",
+        "«Полностью автоматизировать все процессы компании»",
+        "«Нанять 50 специалистов без бюджета на рекрутинг»"
+      ],
+      correct: 1,
+      explanation: "Правильно! Вторая цель реалистична: ограниченный масштаб, чёткий срок, минимальные ресурсы."
+    },
+    {
+      type: "input",
+      title: "R — Проверь релевантность",
+      instruction: "Объясните, как цель связана с главной задачей (1-2 предложения):",
+      badExample: "Цель: «Изучить английский». Задача: «Выйти на международный рынок»",
+      placeholder: "Например: «Знание английского позволит вести переговоры с зарубежными партнёрами и расширить клиентскую базу»",
+      check: (val) => {
+        const lower = val.toLowerCase();
+        return /(позволит|поможет|обеспечит|даст возможность|необходимо для|чтобы)/.test(lower) && val.length > 30;
+      },
+      hint: "Покажите причинно-следственную связь: «Цель → Результат → Польза для главной задачи»."
+    },
+    {
+      type: "final",
+      title: "Соберите SMART-цель",
+      instruction: "Сформулируйте полную SMART-цель по вашей реальной задаче:",
+      fields: [
+        { id: "specific", label: "Конкретика (Что? Кто? Где?)", placeholder: "Что именно нужно сделать?" },
+        { id: "measurable", label: "Метрика успеха", placeholder: "Как измерить результат? (цифры, %, сроки)" },
+        { id: "achievable", label: "Ресурсы и реалистичность", placeholder: "Какие ресурсы есть? Почему это достижимо?" },
+        { id: "relevant", label: "Связь с главной задачей", placeholder: "Как это приближает к стратегической цели?" },
+        { id: "timebound", label: "Дедлайн", placeholder: "Конкретная дата или период" }
+      ],
+      check: (answers) => Object.values(answers).filter(v => v.trim().length > 10).length >= 4,
+      hint: "Проверьте каждый пункт по аббревиатуре SMART. Заполните минимум 4 поля."
+    }
+  ];
+
+  const state = { screen: 'start', theoryIndex: 0, practiceIndex: 0, score: 0, userName: '', answers: {} };
+
+  const screens = {
+    start: document.getElementById('start-screen'),
+    theory: document.getElementById('theory-screen'),
+    practice: document.getElementById('practice-screen'),
+    result: document.getElementById('result-screen')
+  };
+  const els = {
+    fioInput: document.getElementById('fio-input'),
+    fioError: document.getElementById('fio-error'),
+    theoryContent: document.getElementById('theory-content'),
+    theoryProgress: document.getElementById('theory-progress'),
+    theoryBar: document.getElementById('theory-bar'),
+    prevTheory: document.getElementById('prev-theory'),
+    nextTheory: document.getElementById('next-theory'),
+    startPracticeBtn: document.getElementById('start-practice'),
+    practiceProgress: document.getElementById('practice-progress'),
+    practiceBar: document.getElementById('practice-bar'),
+    exerciseContainer: document.getElementById('exercise-container'),
+    practiceFeedback: document.getElementById('practice-feedback'),
+    checkAnswerBtn: document.getElementById('check-answer'),
+    nextExerciseBtn: document.getElementById('next-exercise'),
+    finalScore: document.getElementById('final-score'),
+    resultMessage: document.getElementById('result-message'),
+    certName: document.getElementById('cert-name'),
+    certDate: document.getElementById('cert-date')
+  };
+
+  function validateFIO(value) {
+    return /^[\p{L}\s\.\-]{3,}$/u.test(value.trim());
+  }
+
+  function updateFIOValidation() {
+    const value = els.fioInput.value.trim();
+    if (!value) {
+      els.fioInput.classList.remove('valid');
+      els.fioError.classList.add('show');
+      return false;
+    }
+    if (!validateFIO(value)) {
+      els.fioInput.classList.remove('valid');
+      els.fioError.classList.add('show');
+      return false;
+    }
+    els.fioInput.classList.add('valid');
+    els.fioError.classList.remove('show');
+    return true;
+  }
+
+  function showScreen(name) {
+    Object.values(screens).forEach(s => s.classList.remove('active'));
+    screens[name].classList.add('active');
+    state.screen = name;
+  }
+
+  function startCourse() {
+    if (!updateFIOValidation()) { els.fioInput.focus(); return; }
+    state.userName = els.fioInput.value.trim();
+    localStorage.setItem('smartCourse_fio', state.userName);
+    showTheory();
+  }
+
+  function showTheory() {
+    state.theoryIndex = 0;
+    renderTheory();
+    showScreen('theory');
+  }
+
+  function renderTheory() {
+    const item = smartTheory[state.theoryIndex];
+    els.theoryContent.innerHTML = `
+      <div class="theory-card">
+        <h3><span class="smart-letter">${item.letter}</span>${item.title}</h3>
+        ${item.content}
+      </div>
+    `;
+    els.theoryProgress.textContent = `${state.theoryIndex + 1}/5`;
+    els.theoryBar.style.width = `${((state.theoryIndex + 1) / 5) * 100}%`;
+    els.prevTheory.disabled = state.theoryIndex === 0;
+    if (state.theoryIndex === 4) {
+      els.nextTheory.style.display = 'none';
+      els.startPracticeBtn.style.display = 'block';
+    } else {
+      els.nextTheory.style.display = 'block';
+      els.startPracticeBtn.style.display = 'none';
+    }
+  }
+
+  function changeTheory(dir) {
+    const newIndex = state.theoryIndex + dir;
+    if (newIndex >= 0 && newIndex < smartTheory.length) {
+      state.theoryIndex = newIndex;
+      renderTheory();
+    }
+  }
+
+  function startPractice() {
+    state.practiceIndex = 0;
+    state.score = 0;
+    state.answers = {};
+    renderExercise();
+    showScreen('practice');
+  }
+
+  function renderExercise() {
+    const ex = practiceExercises[state.practiceIndex];
+    els.practiceProgress.textContent = `Уровень ${state.practiceIndex + 1}/${practiceExercises.length}`;
+    els.practiceBar.style.width = `${(state.practiceIndex / practiceExercises.length) * 100}%`;
+    els.practiceFeedback.className = 'feedback';
+    els.practiceFeedback.textContent = '';
+    els.checkAnswerBtn.style.display = 'block';
+    els.nextExerciseBtn.style.display = 'none';
+
+    let html = `<div class="exercise"><div class="exercise-title">📝 ${ex.title}</div>`;
+    
+    if (ex.type === "quiz") {
+      html += `<p style="margin-bottom:15px;">${ex.question}</p><div class="options-grid" id="quiz-options">`;
+      ex.options.forEach((opt, idx) => {
+        html += `<div class="option-card" data-idx="${idx}" onclick="selectOption(this)">
+                   <div class="option-radio"></div><div>${opt}</div>
+                 </div>`;
+      });
+      html += `</div>`;
+    } else if (ex.type === "input") {
+      html += `<p style="margin:10px 0; color:var(--muted);">${ex.instruction}</p>
+               <div class="example-box bad" style="margin:10px 0;"><div class="example-label">Исходная формулировка</div>${ex.badExample}</div>
+               <div class="input-group"><label>Ваш вариант:</label><textarea id="user-input" placeholder="${ex.placeholder}"></textarea></div>
+               <p style="font-size:0.9rem; color:var(--warning); margin-top:8px;">💡 ${ex.hint}</p>`;
+    } else if (ex.type === "final") {
+      html += `<p style="margin:10px 0; color:var(--muted);">${ex.instruction}</p>`;
+      ex.fields.forEach(field => {
+        html += `<div class="input-group"><label>${field.label}</label><input type="text" id="field-${field.id}" placeholder="${field.placeholder}"></div>`;
+      });
+      html += `<p style="font-size:0.9rem; color:var(--warning); margin-top:8px;">💡 ${ex.hint}</p>`;
+    }
+    
+    html += `</div>`;
+    els.exerciseContainer.innerHTML = html;
+  }
+
+  function selectOption(el) {
+    document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function checkPracticeAnswer() {
+    const ex = practiceExercises[state.practiceIndex];
+    let isCorrect = false;
+    let feedback = '';
+    
+    if (ex.type === "quiz") {
+      const selected = document.querySelector('.option-card.selected');
+      if (!selected) { showFeedback('Выберите вариант ответа!', 'err'); return; }
+      const answer = parseInt(selected.dataset.idx);
+      if (answer === ex.correct) {
+        isCorrect = true;
+        feedback = `✅ ${ex.explanation}`;
+        state.score++;
+        selected.classList.add('correct');
+      } else {
+        feedback = `❌ Неверно. ${ex.explanation}`;
+        selected.classList.add('wrong');
+        document.querySelector(`.option-card[data-idx="${ex.correct}"]`).classList.add('correct');
+      }
+    } else if (ex.type === "input") {
+      const userInput = document.getElementById('user-input').value.trim();
+      if (!userInput) { showFeedback('Введите ваш ответ!', 'err'); return; }
+      isCorrect = ex.check(userInput);
+      if (isCorrect) { feedback = '✅ Отлично! Ваша формулировка соответствует критериям.'; state.score++; }
+      else { feedback = `💡 Попробуйте доработать: ${ex.hint}`; }
+    } else if (ex.type === "final") {
+      const answers = {};
+      ex.fields.forEach(f => { answers[f.id] = document.getElementById(`field-${f.id}`).value.trim(); });
+      state.answers = answers;
+      isCorrect = ex.check(answers);
+      if (isCorrect) { feedback = '✅ Отлично! Ваша SMART-цель сформулирована.'; state.score++; }
+      else { feedback = `💡 Попробуйте доработать: ${ex.hint}`; }
+    }
+    
+    showFeedback(feedback, isCorrect ? 'ok' : 'tip');
+    els.checkAnswerBtn.style.display = 'none';
+    els.nextExerciseBtn.style.display = 'block';
+  }
+
+  function showFeedback(text, type) {
+    els.practiceFeedback.textContent = text;
+    els.practiceFeedback.className = `feedback ${type} show`;
+  }
+
+  function nextExercise() {
+    state.practiceIndex++;
+    if (state.practiceIndex >= practiceExercises.length) finishCourse();
+    else renderExercise();
+  }
+
+  function finishCourse() {
+    showScreen('result');
+    els.finalScore.textContent = `${state.score}/${practiceExercises.length}`;
+    const percent = Math.round((state.score / practiceExercises.length) * 100);
+    let message = '';
+    if (percent >= 90) message = "🌟 Превосходно! Вы мастер постановки целей.";
+    else if (percent >= 70) message = "👍 Отлично! Вы уверенно применяете SMART.";
+    else if (percent >= 50) message = "📈 Хорошо! Повторите теорию — и будет ещё лучше.";
+    else message = "💪 Не сдавайтесь! Практика приведёт к мастерству.";
+    els.resultMessage.textContent = `${state.userName}, ${message}`;
+    els.certName.textContent = state.userName || 'Пользователь';
+    const now = new Date();
+    els.certDate.textContent = `Дата: ${now.toLocaleDateString('ru-RU', { year: 'numeric', month: 'long', day: 'numeric' })}`;
+  }
+
+  function downloadCertificate() {
+    const certText = `СЕРТИФИКАТ\n=============\nНастоящим подтверждается, что ${state.userName || 'Пользователь'}\nуспешно освоил(а) методику постановки SMART-целей.\nРезультат: ${state.score}/${practiceExercises.length}\nДата: ${els.certDate.textContent.replace('Дата: ', '')}\n=============\n#SMART #Цели #Развитие`;
+    navigator.clipboard?.writeText(certText).then(() => {
+      alert("✅ Сертификат скопирован в буфер обмена!\nВы можете вставить его в документ или заметку.");
+    }).catch(() => {
+      const textarea = document.createElement('textarea');
+      textarea.value = certText;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      alert("✅ Сертификат скопирован в буфер обмена!");
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedFIO = localStorage.getItem('smartCourse_fio');
+    if (savedFIO) { els.fioInput.value = savedFIO; state.userName = savedFIO; }
+    els.fioInput.addEventListener('input', updateFIOValidation);
+    els.fioInput.addEventListener('blur', updateFIOValidation);
+    els.fioInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') { e.preventDefault(); if (updateFIOValidation()) startCourse(); }
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && state.screen === 'practice') {
+        const active = document.activeElement;
+        if (active.tagName === 'TEXTAREA' || active.tagName === 'INPUT') {
+          e.preventDefault();
+          if (els.checkAnswerBtn.style.display !== 'none') checkPracticeAnswer();
+        }
+      }
+    });
+  });
+</script>
+</body>
+</html>
